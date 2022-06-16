@@ -25,7 +25,7 @@ def get_random_ip():
         print(random_ip)
     except Exception as e:
         # 代理添加为空，表示代理池IP都不可用
-        print("代理池IP都不可用",str(e))
+        print("代理池IP都不可用：", str(e))
         random_ip = "export ALL_PROXY= ''"
     print("本次IP是", random_ip)
     log_ip("本次IP是" + str(random_ip))
@@ -40,8 +40,10 @@ def get_random_ip():
             f = open(data['path'], 'w+', encoding='utf-8')
             f.writelines(flist)
         except Exception as e:
-            log_ip("异常问题，get_random_ip" + str(e))
+            log_ip("可能行不存在异常问题，get_random_ip：" + str(e))
+            print("可能行不存在异常问题，get_random_ip：" + str(e))
         f.close()
     except Exception as e:
         # 打印明显异常信息
-        log_ip("异常问题，get_random_ip" + str(e))
+        log_ip("可能路径不存在，get_random_ip：" + str(e))
+        print("可能路径不存在，get_random_ip：" + str(e))

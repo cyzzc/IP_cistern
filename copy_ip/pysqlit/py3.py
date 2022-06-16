@@ -1,4 +1,6 @@
 import sqlite3
+import time
+
 from copy_ip.conn import read_yaml
 
 
@@ -46,7 +48,8 @@ def insert_data(ip_port,ip, port, protocol, country):
         cursor, db = create_db()
         # 插入数据 ip, port,  protocol, country
         cursor.execute("insert into acting values('%s','%s',%d,'%s','%s')" % (ip_port,ip, port, protocol, country))
-
+        # 延迟0.2秒
+        time.sleep(0.1)
         # cursor.execute("insert into ip values('%s',)" %)
         db.commit()
     except Exception as e:
@@ -90,7 +93,7 @@ def delete_data():
     # 创建数据库
     cursor, db = create_db()
     # 删除数据
-    cursor.execute("delete from acting")
+    cursor.execute('delete from acting')
     db.commit()
     # 关闭数据库
     db.close()
