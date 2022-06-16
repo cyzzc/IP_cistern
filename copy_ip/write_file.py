@@ -18,8 +18,11 @@ def get_random_ip():
     random_ip = None
     try:
         # 获取随机IP，如果没有IP，就把写入文件空，让ql使用主机IP
+        print(len(sql))
         random_ip = random.randint(0, len(sql) - 1)
+        print(random_ip)
         random_ip = 'export ALL_PROXY=' + sql[random_ip][3] + "://" + sql[random_ip][0]
+        print(random_ip)
     except Exception as e:
         # 代理添加为空，表示代理池IP都不可用
         print("代理池IP都不可用",str(e))
@@ -32,7 +35,7 @@ def get_random_ip():
         flist = f.readlines()
         # ql行数从一开始，python读取从零开始
         try:
-            flist[data['line'] - 1] = '{}\n'.format(random_ip)
+            flist[int(data['line']) - 1] = '{}\n'.format(random_ip)
             log_ip("写入文件成功,添加代理是: " + str(random_ip))
             f = open(data['path'], 'w+', encoding='utf-8')
             f.writelines(flist)
