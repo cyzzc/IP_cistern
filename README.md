@@ -13,17 +13,21 @@ python3 kill.py
 ```
 脚本自动添加守护进程，只需python3 kill.py即可，请勿再添加守护进程，使用python3 kill.py可以杀死原来全部ip_broker.py的所有守护进程，而后创建新的
 运行后请查看ql_acting.log日志是否有异常信息
-## [青龙代理视频演示](https://youtu.be/zGoirXzPMQk)
+## [青龙代理视频演示](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
 ## 脚本自动添加守护进程，只需python3 kill.py即可，会在当前目录下添加ip_broker.log控制台输出日志
 ## 下面是在青龙里面运行py文件检测到的IP
 <img src="./img/demo.jpg" alt="">
 <br>
-使用的库
+## 使用的库
+如果运行提示图片 import ****** 报错 请安装 pip install ******，或者百度搜索 import ******,
+pyyaml  = yaml 是用来读取yaml文件的库
+<img src="./img/cw.jpg" alt="错误提示缺少依赖库">
 根据需代码提示缺少依赖添加
 
 ```
 pip3 install sqlite3
 pip3 install requests
+pip3 install pyyaml
 pip3 install datetime
 ```
 
@@ -52,6 +56,7 @@ ql_acting.log > 10M 会清空日志
 添加了sqlite3数据库，支持节点筛选
 添加国外代理
 优化代理检测速度，由原来单线程变成同时检测多个代理，极大减少了未来多节点的检测时间
+第一次运行会提示异常，第二次就没有问题了
 
 
 #### 未来版本
