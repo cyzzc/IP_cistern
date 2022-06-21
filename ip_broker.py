@@ -3,7 +3,7 @@ from threading import Timer
 from copy_ip.git_poxy import get_git_ip
 from copy_ip.http_re import check_ip
 from copy_ip.ip_pool import get_ip
-from copy_ip.write_file import get_random_ip
+from copy_ip.write_file import check_node
 
 
 def while_loop():
@@ -17,9 +17,10 @@ def while_loop():
     # 测试代理
     check_ip()
     # 写入文件
-    get_random_ip()
+    check_node()
     # 定时任务，300 更新一次，可自己改
     timer(300)
+
 
 def timer(delay):
     """
@@ -30,5 +31,7 @@ def timer(delay):
     hit = " "
     t = Timer(delay, while_loop, ())  # 三个参数分别是：延迟时间 调用函数 (传入调用函数的参数（必须是tuple）)
     t.start()
+
+
 if __name__ == '__main__':
     while_loop()

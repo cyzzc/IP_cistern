@@ -1,33 +1,22 @@
 # 写入文件
 import random
 
+import requests
+
 from copy_ip.conn import read_yaml
+from copy_ip.other.heade import get_user_agent
 from copy_ip.other.log import log_ip
 from copy_ip.pysqlit.py3 import select_data
 
 data = read_yaml()
-sql = select_data()
 
 
-def get_random_ip():
+def get_random_ip(random_ip):
     """
     如果节点都不可以用，就把写入文件空，让ql使用主机IP，
     添加路径异常判断，如果路径不存在，打印路径不存在
     :return:
     """
-    random_ip = None
-    try:
-        # 获取随机IP，如果没有IP，就把写入文件空，让ql使用主机IP
-        print(len(sql))
-        random_ip = random.randint(0, len(sql) - 1)
-        print(random_ip)
-        random_ip = 'export ALL_PROXY=' + sql[random_ip][3] + "://" + sql[random_ip][0]
-        print(random_ip)
-    except Exception as e:
-        # 代理添加为空，表示代理池IP都不可用
-        print("代理池IP都不可用：", str(e))
-        random_ip = "export ALL_PROXY= ''"
-    print("本次IP是", random_ip)
     log_ip("本次IP是" + str(random_ip))
     # 写入文件
     try:
@@ -47,3 +36,66 @@ def get_random_ip():
         # 打印明显异常信息
         log_ip("可能路径不存在，get_random_ip：" + str(e))
         print("可能路径不存在，get_random_ip：" + str(e))
+
+
+# 获取节点
+def read_node():
+    sql = select_data()
+    for i in range(len(sql)):
+        random_ip = sql[i][3] + "://" + sql[i][0]
+        proxies = {
+            'http': random_ip,
+            'https': random_ip
+        }
+
+        try:
+            s = requests.session()
+            s.keep_alive = False
+            output1 = requests.get("https://baidu.com/", proxies=proxies, headers=get_user_agent(), timeout=2,
+                                   verify=False)
+            if output1.status_code == 200:
+                output1.close()
+                get_random_ip('export ALL_PROXY=' + random_ip)
+                print("节点可用，添加代理是：" + str(random_ip))
+                return 0
+        except Exception as e:
+            print("节点不可用，节点是：" + str(e))
+            pass
+    # 所有节点都不可用,删除节点那以后文字
+    log_ip("所有节点都不可用,删除添加行文字")
+    print("所有节点都不可用,删除添加行文字")
+    get_random_ip("# ")
+
+
+# 添加节点检测
+def check_node():
+    """
+    添加之前再次检测节点是否可用
+    获取随机节点
+    :return:
+    """
+    sql = select_data()
+    try:
+        # 第一次使用随机IP，诺随机IP不可用，按顺序获取IP
+        random_ip = random.randint(0, len(sql) - 1)
+        print(random_ip)
+        random_ip = sql[random_ip][3] + "://" + sql[random_ip][0]
+        proxies = {
+            'http': random_ip,
+            'https': random_ip
+        }
+        try:
+            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=2,
+                                   verify=False)
+            if output1.status_code == 200:
+                output1.close()
+                print("随机，节点可用，添加代理是：" + str(random_ip))
+                get_random_ip('export ALL_PROXY=' + random_ip)
+            # 添加节点成功
+        except Exception as e:
+            print("随机，节点不可用，节点是：" + str(e))
+            read_node()
+    except Exception as e:
+        log_ip("节点池中没有节点代理池可能不能使用了，check_node：" + str(e))
+        print("节点池中没有节点代理池可能不能使用了，异常：" + str(e))
+        read_node()
