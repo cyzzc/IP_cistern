@@ -3,4 +3,4 @@
 # 其他库
 requests >= 2.24.0
 pyyaml >= 5.3.1
-
+schedule >= 1.1.0

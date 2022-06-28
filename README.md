@@ -1,25 +1,16 @@
 # 青龙使用代理池来避免黑IP问题
-
 ## 此文档默认为最新文档，同步脚本更新此文档
-
 ## 需要下载 ip_broker.py 、kill.py 和 copy_ip、con.yml目录的文件，否则报错
-
 #### 本脚本可能有一些其他问题存在，出现问题请反馈
-
 ## 运行脚本
-
 安装所需库
-
 ```pip3
 pip3 install -r requirements.txt
 ```
-
 测试脚本是否正常
-
 ```shell
 python3 ip_broker.py
 ```
-
 先运行上面命令查看脚本是否有问题，没有问题运行下面命令进行，ip_broker.py只是检测脚本是否设置正确
 运行脚本并添加守护进程
 
@@ -32,24 +23,28 @@ python3 kill.py
 
 ## [青龙代理视频演示](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
 
-## 脚本自动添加守护进程，只需python3 kill.py即可，会在当前目录下添加ip_broker.log控制台输出日志
+## 文件配置conn.yml
+
+```text
+第3行青龙配置文件路径
+第6行代理添加行数 (不能最后一行)
+第9行日志输出路径
+第12行虚拟数据库存储路径
+第15行代理筛选
+第17行取消添加代理的时间，建议提前几秒，不支持日期，精确到秒
+```
 
 ## 下面是在青龙里面运行py文件检测到的IP
 
-<img src="./img/demo.jpg" alt="">
+<img src="../../../IP_cistern/img/demo.jpg" alt="">
 <br>
 
-<details>
-  <summary>使用报错</summary>
-  <pre><code> 
+### 使用报错
+
 如果运行提示图片 import ****** 报错 请安装 pip install ******，或者百度搜索 import ******,
-pyyaml  = yaml 是用来读取yaml文件的库
+pyyaml = yaml 是用来读取yaml文件的库
 <img src="./img/cw.jpg" alt="错误提示缺少依赖库">
 根据需代码提示缺少依赖添加
-  </code></pre>
-</details>
-
-### 请在con.yml文件中配置相关信息
 
 ### 查看是否添加成功
 
@@ -136,6 +131,8 @@ https://proxy.seofangfa.com/ 可以使用就一个检测成功的
 1.2.1版本
     > 修复了sqlite3数据库获取上次数据问题，无法获取本次代理问题
     > 增加了代理检测，在添加到配置文件的时候又进行了一次检测，但是会导致脚本运行时间延长
+1.2.1版本
+    > 添加定时任务取消代理
 未来版本
     > 逐渐向代理池方向发展
   </code></pre>

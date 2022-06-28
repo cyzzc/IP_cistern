@@ -3,6 +3,7 @@ from threading import Timer
 from copy_ip.git_poxy import get_git_ip
 from copy_ip.http_re import check_ip
 from copy_ip.ip_pool import get_ip
+from copy_ip.time_task import timed_thread
 from copy_ip.write_file import check_node
 
 
@@ -34,4 +35,6 @@ def timer(delay):
 
 
 if __name__ == '__main__':
+    #  timed_thread可能存在未知BUG，如果不取消代理请删除
+    timed_thread()
     while_loop()
