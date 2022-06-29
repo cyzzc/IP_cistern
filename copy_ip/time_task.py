@@ -32,7 +32,6 @@ def schedule_ds(ti):
 def timed_thread():
     timing = read_yaml()['timing']
     threads = []
-    print(len(timing))
     # 如果没有设置定时关闭代理就不添加定时任务
     if len(timing) > 0:
         log_ip("定时任务开启成功，中间会取消代理")

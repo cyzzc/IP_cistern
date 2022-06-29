@@ -18,24 +18,32 @@ def get_random_ip(random_ip):
     :return:
     """
     log_ip("本次IP是" + str(random_ip))
-    # 写入文件
-    try:
-        f = open(data['path'], 'r+', encoding='utf-8')
-        flist = f.readlines()
-        # ql行数从一开始，python读取从零开始
-        try:
-            flist[int(data['line']) - 1] = '{}\n'.format(random_ip)
-            log_ip("写入文件成功,添加代理是: " + str(random_ip))
-            f = open(data['path'], 'w+', encoding='utf-8')
-            f.writelines(flist)
-        except Exception as e:
-            log_ip("可能行不存在异常问题，get_random_ip：" + str(e))
-            print("可能行不存在异常问题，get_random_ip：" + str(e))
-        f.close()
-    except Exception as e:
-        # 打印明显异常信息
-        log_ip("可能路径不存在，get_random_ip：" + str(e))
-        print("可能路径不存在，get_random_ip：" + str(e))
+    # 判断 路径和行是否都添加 与 长度不等于0
+    sum_path = len(data['path'])
+    if sum_path == len(data['line']) and sum_path > 0:
+        # 循环数组，添加多个文本
+        for i in range(sum_path):
+            # 写入文件
+            try:
+                f = open(data['path'][i], 'r+', encoding='utf-8')
+                flist = f.readlines()
+                # ql行数从一开始，python读取从零开始
+                try:
+                    flist[int(data['line'][i]) - 1] = '{}\n'.format(random_ip)
+                    log_ip("写入文件成功,添加代理是: " + str(random_ip))
+                    f = open(data['path'][i], 'w+', encoding='utf-8')
+                    f.writelines(flist)
+                except Exception as e:
+                    log_ip("可能行不存在异常问题，get_random_ip：" + str(e))
+                    print("可能行不存在异常问题，get_random_ip：" + str(e))
+                f.close()
+            except Exception as e:
+                # 打印明显异常信息
+                log_ip("可能路径不存在，get_random_ip：" + str(e))
+                print("可能路径不存在，get_random_ip：" + str(e))
+    else:
+        log_ip("请检查conn.yml文件的路径和行是否一一对应，get_random_ip")
+        print("请检查conn.yml文件的路径和行是否一一对应，get_random_ip")
 
 
 # 获取节点

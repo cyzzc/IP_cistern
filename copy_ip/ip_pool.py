@@ -1,5 +1,7 @@
 import json
+
 import requests
+
 from copy_ip.other.heade import get_user_agent
 from copy_ip.other.log import log_ip
 from copy_ip.pysqlit.py3 import insert_data, delete_data, select_data
@@ -17,6 +19,7 @@ def get_ip():
     delete_data()
     select_data()
     print("代理池现在清空" + str(select_data()))
+    print("运行等待20秒，请耐心等待")
     # 获取网站数据
     url = 'https://uu-proxy.com/api/free'
     try:
