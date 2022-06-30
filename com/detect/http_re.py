@@ -2,8 +2,8 @@ import threading
 
 import requests
 
-from copy_ip.other.heade import get_user_agent
-from copy_ip.pysqlit.py3 import select_data, delete_one_data
+from com.other.heade import get_user_agent
+from com.pysqlit.py3 import select_data, delete_one_data
 
 lock = threading.Lock()
 
@@ -22,8 +22,8 @@ def http_request(http_ip_port, ip_port):
     try:
         # 检测节点是否可用.多次检测，如果可用，就把节点添加到字典中，检测多个防止代理无效，主要用于京东使用代理验证京东网址是否支持代理
         # 请求超过3秒，就认为节点不可用
-        output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=2).close()
-        output3 = requests.get("https://www.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=2).close()
+        requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=4).close()
+        requests.get("https://www.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=4).close()
     except Exception as e:
         # 不做任何输出,删除不可用的节点
         lock.acquire()

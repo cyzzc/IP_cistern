@@ -1,7 +1,7 @@
+# 此文档仅仅用于学术交流，请勿用于商业用途
 # 青龙使用代理池来避免黑IP问题
 ## 此文档默认为最新文档，同步脚本更新此文档
-## 需要下载 ip_broker.py 、kill.py 和 copy_ip、con.yml目录的文件，否则报错
-#### 本脚本可能有一些其他问题存在，出现问题请反馈
+#### 本脚本可能有一些其他问题存在，出现问题请反馈，容器版本会尽快发布
 ## 运行脚本
 安装所需库
 ```pip3
@@ -9,65 +9,115 @@ pip3 install -r requirements.txt
 ```
 测试脚本是否正常
 ```shell
-python3 ip_broker.py
+python3 ip.py
 ```
 先运行上面命令查看脚本是否有问题，没有问题运行下面命令进行，ip_broker.py只是检测脚本是否设置正确
 运行脚本并添加守护进程
 
+没有nodejs的使用这个
 ```shell
-python3 kill.py
+python3 kill.py # 开启守护进程
+ps -ef|grep ip.py |grep -v grep|awk '{print $2}'|xargs kill -9 # 杀死守护进程
+```
+有nodejs的使用这个
+```shell
+pm2 start ip.yml --env productionpid # 开启守护进程
+pm2 list # 查看脚本ID HTTPProxy就是
+pm2 delete ID # 杀死守护进程
+pm2 restart ID # 重启获取输入的ID pm2 restart 3
 ```
 
 脚本自动添加守护进程，只需python3 kill.py即可，请勿再添加守护进程，使用python3 kill.py可以杀死原来全部ip_broker.py的所有守护进程，而后创建新的
-运行后请查看ql_acting.log日志是否有异常信息
+运行后请查看ql.log日志是否有异常信息
 
-## [青龙代理视频演示](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
+## [青龙代理视频演示和使用教程](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
 
 ## 文件配置conn.yml
 
 ```text
-第3行青龙配置文件路径
-第6行代理添加行数 (不能最后一行)
-第9行日志输出路径
-第12行虚拟数据库存储路径
-第15行代理筛选
-第18行取消添加代理的时间，建议提前几秒，不支持日期，精确到秒
+第2行占用端口号
+第4行日志文件路径
+第9行 日志输出路径
+第6行数据库位置
 ```
+**如果使用nodejs的pm2执行将ip.yml 并且修改PORT和conn.yml第二行端口一致**
 
-## 下面是在青龙里面运行py文件检测到的IP
-
-<img src="./img/demo.jpg" alt="">
-<br>
 
 ## 青龙面板添加依赖
 
-依赖管理-->Python3-->新建依赖
-
+依赖管理-->nodejs-->新建依赖
+```text
+global-agent
+```
+依赖管理-->python-->新建依赖
 ```text
 requests
 pysocks
 ```
 
-<img src="./img/re.jpg" alt="">
-
 ### 使用报错
 
 如果运行提示图片 import ****** 报错 请安装 pip install ******，或者百度搜索 import ******,
-pyyaml = yaml 是用来读取yaml文件的库
 根据需代码提示缺少依赖添加
 
 <img src="./img/cw.jpg" alt="错误提示缺少依赖库">
 
 ### 查看是否添加成功
-
+#### python3 检测代理是否添加成功
 在青龙脚本管理-->新建脚本-->ip.py
 把下内容进去，然后调试，脚本选择python,然后运行，如果显示代理IP表示添加成功
 
-```python
+```python3
 import requests
 aas = requests.get("https://ip.tool.lu/")
 print("检测到的IP", aas.text)
 ```
+
+#### nodejs 检测代理是否添加成功
+在青龙脚本管理-->新建脚本-->ip.js
+```javascript
+const {bootstrap, globalTunnel} = require("global-agent");
+bootstrap();
+const https = require("https");
+https.get('https://ip.tool.lu/' , function (res) {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+    res.on('data', function (d) {
+        process.stdout.write(d);
+    });
+})
+```
+###  让接口对接青龙教程
+
+配置文件中添加的
+```shell
+urls="http://IP:端口/js" # 默认5001
+url=$(curl $urls)
+export GLOBAL_AGENT_HTTP_PROXY=$url
+export ALL_PROXY=$url
+echo "当前js代理" $url
+```
+
+js里面添加的内容
+```javascript
+const {bootstrap, globalTunnel} = require("global-agent");
+bootstrap();
+```
+```text
+所有js脚本都会调用jdCookie.js的内容获取青龙的CK
+所以修改jdCookie.js的内容,这样就不用把所有的脚本都改了
+既然修改这个脚本就不能把这个脚本拉下来
+把jdCookie.js加入到黑名单中，拉取脚本确认jdCookie.js没有被拉下来，如果拉下来修改后也会被覆盖，因为这个问题头疼了一天
+这里以脚本为例，重点观察^jd[^_] jdCookie
+原本脚本 ql repo 库地址 "jd_|jx_|jdCookie" "activity|backUp" "^jd[^_]|USER|utils|function|sign|sendNotify|ql|JDJR"
+修改后的 ql repo 库地址 "jd_|jx_" "jdCookie.js|activity|backUp" "USER|utils|function|sign|sendNotify|ql|JDJR"
+在库那新建一个jdCookie.js去仓库把脚本内容并且把 **js里面添加的内容** 添加任意位置
+每拉取一个库就修改一个使用代理的情况下，不修改会不走代理
+然后就成了
+```
+## 有想捐赠的可以捐赠下
+<img src="./img/wx.jpg" alt="微信收款码" height="300px" width="300px">
+<img src="./img/zfb.jpg" alt="支付宝收款码" height="300px" width="300px">
 
 <details>
   <summary>不可用的代理池</summary>
@@ -147,8 +197,11 @@ https://proxy.seofangfa.com/ 可以使用就一个检测成功的
     > 添加定时任务取消代理
 1.2.3版本
     > 添加支持多个容器代理
-未来版本
-    > 逐渐向代理池方向发展
+2.0版本
+    > 修复了不能Js不走代理的问题
+    > 耗费资源问题，由原来每次都爬取变成少于6次再爬取
+    > 为了防止一些代理存活时间过长，四个小时后自动强制爬取一次
+    > 添加了接口，由脚本执行调用一次切换一次代理
   </code></pre>
 </details>
 

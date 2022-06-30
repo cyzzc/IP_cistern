@@ -2,9 +2,9 @@ import re
 
 import requests
 
-from copy_ip.other.heade import get_user_agent
-from copy_ip.other.log import log_ip
-from copy_ip.pysqlit.py3 import insert_data
+from com.other.heade import get_user_agent
+from com.other.log import log_ip
+from com.pysqlit.py3 import insert_data
 
 
 def get_git_ip():
@@ -25,15 +25,12 @@ def get_git_ip():
         http_port = re_port.findall(re1)
         http_country = re_country.findall(re1)
         http_type = re_type.findall(re1)
-        # print(len(http_ip))
-        # print(len(http_port))
-        # print(len(http_country))
-        # print(len(http_type))
         for i in range(len(http_ip) - 1):
             # 创建字典，里面存放所有网络协议,原因https 不能使用,但是转换成http协议可以使用
-            http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4", "socks5": "socks5"}
-            insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                        http_country[i])
+            if http_type[i] == "https" or http_type[i] == "http":
+                http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
+                                "socks5": "socks5"}
+                insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
+                            http_country[i])
     except Exception as e:
-        print("异常问题，git_poxy: " + str(e))
         log_ip("异常问题，git_poxy: " + str(e))
