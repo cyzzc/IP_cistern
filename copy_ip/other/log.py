@@ -1,6 +1,5 @@
 import logging
 import os
-
 import time
 
 from copy_ip.conn import read_yaml
@@ -17,7 +16,7 @@ logger.addHandler(file_handle)
 
 def log_ip(data):
     aa = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-    logging.error(f"{aa} : {data}")
+    logger.error(f"{aa} : {data}")
     file_handle.close()
     dele_ip()
 
@@ -26,4 +25,3 @@ def dele_ip():
     # 当文件大于10M时，删除文件
     if os.path.getsize(path) > 10485760:
         os.remove(path)
-        print("删除文件")
