@@ -38,7 +38,6 @@ pm2 restart ID # 重启获取输入的ID pm2 restart 3
 ```text
 第2行占用端口号
 第4行日志文件路径
-第9行 日志输出路径
 第6行数据库位置
 ```
 **如果使用nodejs的pm2执行将ip.yml 并且修改PORT和conn.yml第二行端口一致**
