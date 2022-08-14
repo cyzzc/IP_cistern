@@ -31,6 +31,6 @@ def get_git_ip():
                 http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                 "socks5": "socks5"}
                 insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                            http_country[i])
+                            http_country[i], 'filter')
     except Exception as e:
         log_ip("异常问题，git_poxy: " + str(e))

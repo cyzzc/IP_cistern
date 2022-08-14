@@ -10,7 +10,7 @@ from com.pysqlit.py3 import select_data
 scheduler = APScheduler()
 
 
-@scheduler.task('interval', id='implement', hours=1)
+@scheduler.task('interval', id='implement', hours=3)
 def implement():
     """
     定时任务 每四小时检测一次大检测
@@ -34,17 +34,25 @@ def timing_ck():
     """
     # 用来获取数据长度
     sql = select_data()
-    # 如果数据长度不大于6条，就重新爬取
-    if len(sql) <= 5:
-        log_ip("数据长度小于6条，重新爬取")
-        print("数据长度小于6条，重新爬取")
+    # 检测返回的类型
+    if type(sql) == list:
+        # 如果数据长度不大于6条，就重新爬取
+        if len(sql) <= 5:
+            log_ip("数据长度小于6条，重新爬取")
+            # 获取代理
+            get_ip()
+            get_git_ip()
+            # 测试代理
+            check_ip()
+        else:
+            log_ip("数据长度大于6条，不需要重新爬取")
+    else:
+        log_ip("数据库中没有数据，重新爬取")
         # 获取代理
         get_ip()
         get_git_ip()
         # 测试代理
         check_ip()
-    else:
-        log_ip("数据长度大于6条，不需要重新爬取")
 
 
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ def get_ip():
             country = "CN"
             if protocol == "http" or protocol == "https":
                 # 添加的数据库
-                insert_data(ip + ':' + str(port), ip, port, protocol, country)
+                insert_data(ip + ':' + str(port), ip, port, protocol, country, 'filter')
         # 关闭爬取网站
         strhtml.close()
 
