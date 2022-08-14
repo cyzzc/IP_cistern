@@ -11,10 +11,13 @@ lock = threading.Lock()
 def http_request(http_ip_port, ip_port, data):
     """
     检测节点是否可用
+    :param data:
     :param http_ip_port: 测试的节点
     :param ip_port: 如果不可用删除的索引
     :return:
     """
+    print('================================')
+    print(http_ip_port)
     proxies = {
         'http': http_ip_port,
         'https': http_ip_port
@@ -22,8 +25,8 @@ def http_request(http_ip_port, ip_port, data):
     try:
         # 检测节点是否可用.多次检测，如果可用，就把节点添加到字典中，检测多个防止代理无效，主要用于京东使用代理验证京东网址是否支持代理
         # 请求超过3秒，就认为节点不可用
-        requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=4).close()
-        requests.get("https://www.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=4).close()
+        requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=15).close()
+        requests.get("https://www.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=15).close()
         lock.acquire()
         # 检测成功添加到可用代理的数据库中
         insert_data(data[0], data[1], data[2], data[3], data[4])

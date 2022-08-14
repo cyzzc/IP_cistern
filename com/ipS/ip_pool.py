@@ -16,7 +16,7 @@ def get_ip():
     url = 'https://uu-proxy.com/api/free'
     try:
 
-        strhtml = requests.get(url, headers=get_user_agent(), verify=False)
+        strhtml = requests.get(url, headers=get_user_agent(), verify=False, timeout=20)
         data = json.loads(strhtml.text)
         for i in range(len(data['free']['proxies'])):
             # 下面是 地址、端口号、协议、支持HTTPS

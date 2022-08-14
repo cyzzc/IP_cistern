@@ -54,7 +54,6 @@ def insert_data(ip_port, ip, port, protocol, country, surface='acting'):
     :param surface: 数据库表名，默认acting
     :return:
     """
-    db = None
     try:
         # 创建数据库
         cursor, db = create_db()

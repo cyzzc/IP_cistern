@@ -1,6 +1,13 @@
 from flask_apscheduler import APScheduler
 
 from com.Web.index import run_web
+from com.ipS.get_ip3366 import get_ip3366
+from com.ipS.get_jiangxianli import get_jxl
+from com.ipS.get_kxdaili import get_kuai
+from com.ipS.get_proxylist import get_fate
+from com.ipS.get_pzzqz import get_pzz
+from com.ipS.get_scan import get_scan
+from com.ipS.get_v1 import get_v1
 from com.ipS.git_poxy import get_git_ip
 from com.detect.http_re import check_ip
 from com.ipS.ip_pool import get_ip
@@ -10,18 +17,33 @@ from com.pysqlit.py3 import select_data
 scheduler = APScheduler()
 
 
-@scheduler.task('interval', id='implement', hours=3)
+def ip():
+    """
+    执行爬取
+    :return:
+    """
+    # 获取代理
+    get_ip()
+    get_git_ip()
+    get_fate()
+    get_pzz()
+    get_scan()
+    get_kuai()
+    get_ip3366()
+    get_v1()
+    get_jxl()
+    # 测试代理
+    check_ip()
+
+
+@scheduler.task('interval', id='implement', hours=1)
 def implement():
     """
     定时任务 每四小时检测一次大检测
     :return:
     """
     try:
-        # 获取代理
-        get_ip()
-        get_git_ip()
-        # 测试代理
-        check_ip()
+        ip()
     except Exception as e:
         log_ip("定时任务报错" + str(e))
 
@@ -38,21 +60,12 @@ def timing_ck():
     if type(sql) == list:
         # 如果数据长度不大于6条，就重新爬取
         if len(sql) <= 5:
-            log_ip("数据长度小于6条，重新爬取")
-            # 获取代理
-            get_ip()
-            get_git_ip()
-            # 测试代理
-            check_ip()
+            ip()
         else:
             log_ip("数据长度大于6条，不需要重新爬取")
     else:
         log_ip("数据库中没有数据，重新爬取")
-        # 获取代理
-        get_ip()
-        get_git_ip()
-        # 测试代理
-        check_ip()
+        ip()
 
 
 if __name__ == '__main__':

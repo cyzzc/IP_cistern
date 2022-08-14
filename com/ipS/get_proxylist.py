@@ -1,3 +1,5 @@
+# http://proxylist.fatezero.org/proxy.list
+
 import re
 
 import requests
@@ -7,19 +9,19 @@ from com.other.log import log_ip
 from com.pysqlit.py3 import insert_data
 
 
-def get_git_ip():
+def get_fate():
     try:
-        reps = requests.get("https://gh.fakev.cn/fate0/proxylist/blob/master/proxy.list", headers=get_user_agent(), timeout=20)
+        reps = requests.get("http://proxylist.fatezero.org/proxy.list", headers=get_user_agent(), timeout=20)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
 
         # 正则表达式
         # 分别是IP，端口，类型，国家
-        re_ip = re.compile(r'host&quot;: &quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
-        re_port = re.compile(r'&quot;port&quot;: (\d{2,6})')
-        re_country = re.compile(r'&quot;country&quot;: &quot;(\w+)')
-        re_type = re.compile(r'&quot;type&quot;: &quot;(\w+)')
+        re_ip = re.compile(r'"host":\s?"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"')
+        re_port = re.compile(r'"port":\s?(\d{2,9})')
+        re_country = re.compile(r'"country":\s?"(\w+)"')
+        re_type = re.compile(r'"type":\s?"(\w+)"')
 
         http_ip = re_ip.findall(re1)
         http_port = re_port.findall(re1)
@@ -33,4 +35,4 @@ def get_git_ip():
                 insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
                             http_country[i], 'filter')
     except Exception as e:
-        log_ip("异常问题，git_poxy: " + str(e))
+        log_ip("异常问题，get_fate: " + str(e))

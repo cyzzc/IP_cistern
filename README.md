@@ -1,5 +1,6 @@
 # 此文档仅仅用于学术交流，请勿用于商业用途
 # 青龙使用代理池来避免黑IP问题
+## TG群 https://t.me/intiidea 
 ## 此文档默认为最新文档，同步脚本更新此文档
 #### 本脚本可能有一些其他问题存在，出现问题请反馈，容器版本会尽快发布
 ## 运行脚本
@@ -37,7 +38,6 @@ pm2 restart ID # 重启获取输入的ID pm2 restart 3
 ```text
 第2行占用端口号
 第4行日志文件路径
-第9行 日志输出路径
 第6行数据库位置
 ```
 **如果使用nodejs的pm2执行将ip.yml 并且修改PORT和conn.yml第二行端口一致**
@@ -130,10 +130,8 @@ https://www.atomintersoft.com/high_anonymity_elite_proxy_list 不可用
 https://ab57.ru/downloads/proxyold.txt 不可用
 http://www.proxylists.net/http_highanon.txt 不可用
 https://www.my-proxy.com/free-proxy-list-2.html 不可用
-http://www.cybersyndrome.net/pla6.html 不可用
 https://www.cnproxy.com/proxy1.html 不可用
-https://www.89ip.cn/index_1.html 不可用
-http://www.kxdaili.com/dailiip/2/1.html 不可用
+https://www.89ip.cn/ 不可用
 http://emailtry.com/index/1 不可用
 https://pzzqz.com/ 不可用
 http://nntime.com/ 不可用
@@ -141,30 +139,31 @@ https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1 不可用
 https://openproxy.space/ 不可用
 https://www.tyhttp.com/free/ 不可用
 https://proxy11.com/ 不可用
+http://www.nimadaili.com/ 服务器垃圾
+http://www.ip3366.net/
   </code></pre>
 </details>
 
 <details>
   <summary>检测可用代理池</summary>
   <pre><code> 
-http://proxylist.fatezero.org/ = http://proxylist.fatezero.org/proxy.list 可用率高
+https://premproxy.com/socks-list/
+https://api.proxyscrape.com/?request=displayproxies&proxytype=all
+https://www.proxyscan.io/
+https://pzzqz.com/
+http://proxylist.fatezero.org/  可用率高
 https://proxy.mimvp.com/freesecret 抓起来麻烦，端口是图片
 https://freeproxylists.net/zh/ 1/10
 http://www.kxdaili.com/dailiip.html 1/5
-http://www.kxdaili.com/dailiip/2/1.html 1/10
-http://pubproxy.com/api/proxy?limit=20&format=txt&type=http 不可用，偶尔可用
+http://pubproxy.com/api/proxy 不可用，偶尔可用
 https://www.cool-proxy.net/ 九个出一个
 https://proxy-list.org/english/index.php bs4加密，可能有反爬，国内不能直接访问，待测试可用时长
 https://regex101.com/
 https://ip.jiangxianli.com/ 13个出两个
 https://www.freeproxylists.net/zh/ 1/20
 https://www.proxy-list.download/HTTP 26出一个
-http://www.kxdaili.com/dailiip/2/1.html 11个出一个
-http://www.kxdaili.com/dailiip.html 9个出三个
 http://www.cybersyndrome.net/pla6.html 1/20可用
-http://www.cybersyndrome.net/pla6.html 1/10
-https://spys.one/en/anonymous-proxy-list/ 一个可用
-https://spys.one/en/https-ssl-proxy/ 两个
+https://spys.one/en/ 两个
 https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt 1/1000
 https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt 可用率高
 https://github.com/mertguvencli/http-proxy-list
@@ -173,6 +172,10 @@ https://ip.ihuan.me/ 一个可用
 https://hidemy.name/en/proxy-list/ 一个可用
 https://www.us-proxy.org/ 5个
 https://proxy.seofangfa.com/ 可以使用就一个检测成功的
+https://proxy.ip3366.net/
+https://www.proxy-list.download/api/v1
+https://www.juliangip.com/api?ref=proxy_pool
+http://httpbin.org/ip 显示IP的
   </code></pre>
 </details>
 
@@ -204,6 +207,8 @@ https://proxy.seofangfa.com/ 可以使用就一个检测成功的
     > 添加了接口，由脚本执行调用一次切换一次代理
 2.0.1版本
     > 使用了两个表，一个存储代理，一个存储检测结果
+2.0.2版本
+    > 增加了一些代理池
   </code></pre>
 </details>
 
