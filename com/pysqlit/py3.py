@@ -2,7 +2,6 @@ import sqlite3
 
 from com.other.conn import read_yaml
 
-
 # 创建数据库方法
 from com.other.log import log_ip
 
@@ -42,7 +41,6 @@ def create_table():
         return -1
 
 
-# 插入数据方法
 def insert_data(ip_port, ip, port, protocol, country, surface='acting'):
     """
     插入数据
@@ -58,7 +56,8 @@ def insert_data(ip_port, ip, port, protocol, country, surface='acting'):
         # 创建数据库
         cursor, db = create_db()
         # 插入数据 ip, port,  protocol, country
-        cursor.execute(f"insert into {surface} values('%s','%s','%d','%s','%s')" % (ip_port, ip, port, protocol, country))
+        cursor.execute(
+            f"insert into {surface} values('%s','%s','%d','%s','%s')" % (ip_port, ip, port, protocol, country))
         # cursor.execute("insert into ip values('%s',)" %)
         db.commit()
         # 关闭数据库
@@ -80,6 +79,32 @@ def select_data(surface='acting'):
         cursor, db = create_db()
         # 查询数据
         cursor.execute(f"select * from {surface}")
+        # 获取数据
+        data = cursor.fetchall()
+        # 关闭数据库
+        db.close()
+        return data
+    except Exception as e:
+        log_ip("查询数据失败" + str(e))
+        return -1
+
+
+def select_Location(country=None, surface='acting'):
+    """
+    查询数据所有
+    :param country: 国家
+    :param surface: 数据库表名，默认acting
+    :return: http或https的代理
+    """
+    try:
+        # 创建数据库
+        cursor, db = create_db()
+        # 查询数据
+        if country is None:
+            cursor.execute(f"select * from {surface}")
+        else:
+            # 查询某个国家的数据
+            cursor.execute(f"select * from {surface} where country='{country}'")
         # 获取数据
         data = cursor.fetchall()
         # 关闭数据库

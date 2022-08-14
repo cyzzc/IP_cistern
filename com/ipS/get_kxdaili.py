@@ -29,4 +29,4 @@ def get_kuai():
                 except Exception as e:
                     return 0
     except Exception as e:
-        log_ip("异常问题，git_poxy: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_kxdaili.py: " + str(e))

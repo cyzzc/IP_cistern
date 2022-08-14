@@ -36,4 +36,4 @@ def get_scan():
             insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), 'http',
                         http_country[i], 'filter')
     except Exception as e:
-        log_ip("异常问题，get_scan: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_scan.py: " + str(e))

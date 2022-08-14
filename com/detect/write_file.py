@@ -8,7 +8,7 @@ import requests
 from com.other.conn import read_yaml
 from com.other.heade import get_user_agent
 from com.other.log import log_ip
-from com.pysqlit.py3 import select_data, delete_one_data
+from com.pysqlit.py3 import delete_one_data, select_Location
 
 data = read_yaml()
 
@@ -19,7 +19,7 @@ def read_node():
     按照顺序查找可用节点
     :return: 返回协议://ip:端口，如果都不可用返回-1
     """
-    sql = select_data()
+    sql = select_Location()
     for i in range(len(sql)):
         random_ip = sql[i][3] + "://" + sql[i][0]
         proxies = {
@@ -30,15 +30,13 @@ def read_node():
         try:
             s = requests.session()
             s.keep_alive = False
-            output1 = requests.get("https://baidu.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
+            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
             if output1.status_code == 200:
                 output1.close()
                 return random_ip
             else:
-                print(sql[i][0])
                 # 节点如果不可用，则删除节点
-                aa = delete_one_data(sql[i][0])
-                print("返回值 " + aa)
+                delete_one_data(sql[i][0])
                 continue
         except Exception as e:
             pass
@@ -54,7 +52,7 @@ def check_node():
     获取随机节点
     :return: 返回协议://ip:端口 没有返回-1
     """
-    sql = select_data()
+    sql = select_Location("中国")
     try:
         # 第一次使用随机IP，诺随机IP不可用，按顺序获取IP
         randomnum = random.randint(0, len(sql) - 1)
@@ -64,7 +62,7 @@ def check_node():
             'https': random_ip
         }
         try:
-            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
+            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
             if output1.status_code == 200:
                 output1.close()
                 return random_ip

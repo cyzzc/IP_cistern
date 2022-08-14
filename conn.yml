@@ -4,3 +4,5 @@ port: 5001
 log: ./ip.log
 # 数据库未知
 db: ./com/pysqlit/ip.db
+# 地理位置
+country: 国内

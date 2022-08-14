@@ -1,6 +1,7 @@
 from flask_apscheduler import APScheduler
 
 from com.Web.index import run_web
+from com.ipS.get_crape import get_crape
 from com.ipS.get_ip3366 import get_ip3366
 from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
@@ -11,6 +12,8 @@ from com.ipS.get_v1 import get_v1
 from com.ipS.git_poxy import get_git_ip
 from com.detect.http_re import check_ip
 from com.ipS.ip_pool import get_ip
+from com.other.conn import read_yaml
+from com.other.country import country_revise
 from com.other.log import log_ip
 from com.pysqlit.py3 import select_data
 
@@ -22,6 +25,7 @@ def ip():
     执行爬取
     :return:
     """
+    area = read_yaml()
     # 获取代理
     get_ip()
     get_git_ip()
@@ -32,6 +36,9 @@ def ip():
     get_ip3366()
     get_v1()
     get_jxl()
+    # 下面是适配非国内环境的代理
+    if area['country'] != '国内':
+        get_crape()
     # 测试代理
     check_ip()
 
@@ -69,6 +76,8 @@ def timing_ck():
 
 
 if __name__ == '__main__':
+    # 判断是否是国外环境以此来决定是否爬取国外代理池
+    country_revise()
     #  timed_thread可能存在未知BUG，如果不取消代理请删除
     timing_ck()
     scheduler.start()

@@ -39,4 +39,4 @@ def get_jxl():
                 insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
                             'CN', 'filter')
     except Exception as e:
-        log_ip("异常问题，get_jxl: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_jiangxianli.py: " + str(e))

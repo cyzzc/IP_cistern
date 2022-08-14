@@ -31,4 +31,4 @@ def get_ip():
         strhtml.close()
 
     except Exception as e:
-        log_ip("异常提示,ip_pool>get_ip: " + str(e))
+        log_ip("异常提示,com-->ipS-->ip_pool.py: " + str(e))

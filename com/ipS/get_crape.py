@@ -7,9 +7,9 @@ from com.other.log import log_ip
 from com.pysqlit.py3 import insert_data
 
 
-def get_v1():
+def get_crape():
     try:
-        reps = requests.get("https://www.proxy-list.download/api/v1/get?type=http", headers=get_user_agent(), timeout=10)
+        reps = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=all", headers=get_user_agent(), timeout=10, proxies={'https': 'http://127.0.0.1:10809'})
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
@@ -17,11 +17,11 @@ def get_v1():
         # 正则表达式
         # 分别是IP，端口，类型，国家
         re_ip = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):')
-        re_port = re.compile(r':(\d{2,6})')
+        re_port = re.compile(r':(\d{2,8})')
         http_ip = re_ip.findall(re1)
         http_port = re_port.findall(re1)
-        for v in range(len(http_ip)):
-            insert_data(http_ip[v] + ':' + http_port[v], http_ip[v], int(http_port[v]), 'http',
+        for i in range(len(http_ip)):
+            insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), 'http',
                         'CN', 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_v1.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_crape.py: " + str(e))
