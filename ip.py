@@ -1,11 +1,14 @@
 from flask_apscheduler import APScheduler
 
 from com.Web.index import run_web
+from com.ipS.get_66ip import get_66ip
 from com.ipS.get_crape import get_crape
 from com.ipS.get_ip3366 import get_ip3366
 from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
+from com.ipS.get_proxydb import get_proxydb
 from com.ipS.get_proxylist import get_fate
+from com.ipS.get_proxynova import get_proxynova
 from com.ipS.get_pzzqz import get_pzz
 from com.ipS.get_scan import get_scan
 from com.ipS.get_v1 import get_v1
@@ -36,6 +39,9 @@ def ip():
     get_ip3366()
     get_v1()
     get_jxl()
+    get_66ip()
+    get_proxynova()
+    get_proxydb()
     # 下面是适配非国内环境的代理
     if area['country'] != '国内':
         get_crape()
