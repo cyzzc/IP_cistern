@@ -53,6 +53,7 @@ global-agent
 ```text
 requests
 pysocks
+proxynova-scraper
 ```
 
 ### 使用报错
@@ -175,6 +176,9 @@ https://proxy.seofangfa.com/ 可以使用就一个检测成功的
 https://proxy.ip3366.net/
 https://www.proxy-list.download/api/v1
 https://www.juliangip.com/api?ref=proxy_pool
+https://www.66ip.cn/ 1~2个可用
+https://www.proxydb.net/ 3~6个可用
+https://www.proxynova.com/ 3个可用
 http://httpbin.org/ip 显示IP的
   </code></pre>
 </details>

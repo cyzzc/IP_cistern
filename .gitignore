@@ -1,0 +1,5 @@
+/ip.log
+!/.github/
+!/venv/
+.idea
+**/__pycache__/**
