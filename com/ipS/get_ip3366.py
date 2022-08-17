@@ -11,7 +11,7 @@ def get_ip3366():
     try:
         for j in range(1, 10):
             try:
-                reps = requests.get(f"https://proxy.ip3366.net/free/?action=china&page={j}", headers=get_user_agent(), timeout=10)
+                reps = requests.get(f"https://proxy.ip3366.net/free/?action=china&page={j}", headers=get_user_agent(), timeout=10, verify=False)
                 # 设置编码
                 reps.encoding = "utf-8"
                 re1 = reps.text

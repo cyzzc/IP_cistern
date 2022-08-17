@@ -9,7 +9,7 @@ from com.pysqlit.py3 import insert_data
 
 def get_v1():
     try:
-        reps = requests.get("https://www.proxy-list.download/api/v1/get?type=http", headers=get_user_agent(), timeout=10)
+        reps = requests.get("https://www.proxy-list.download/api/v1/get?type=http", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text

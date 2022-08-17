@@ -13,7 +13,7 @@ def get_66ip():
     :return:
     """
     try:
-        reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=20)
+        reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=10, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text

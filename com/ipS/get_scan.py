@@ -13,7 +13,7 @@ def get_scan():
     :return:
     """
     try:
-        reps = requests.get("https://www.proxyscan.io/", headers=get_user_agent(), timeout=20)
+        reps = requests.get("https://www.proxyscan.io/", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text

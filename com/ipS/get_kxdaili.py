@@ -12,7 +12,7 @@ def get_kuai():
         for i in range(1, 3):
             for j in range(1, 11):
                 try:
-                    reps = requests.get(f"http://www.kxdaili.com/dailiip/{i}/{j}.html", headers=get_user_agent(), timeout=20)
+                    reps = requests.get(f"http://www.kxdaili.com/dailiip/{i}/{j}.html", headers=get_user_agent(), timeout=20, verify=False)
                     # 设置编码
                     reps.encoding = "utf-8"
                     re1 = reps.text

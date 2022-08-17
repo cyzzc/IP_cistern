@@ -4,6 +4,16 @@
 ## 此文档默认为最新文档，同步脚本更新此文档
 #### 本脚本可能有一些其他问题存在，出现问题请反馈，容器版本会尽快发布
 ## 运行脚本
+容器安装
+```shell
+docker run -dit \
+  -p 5001:5001 \
+  --name http \
+  --restart unless-stopped \
+  xgzk/httpproxy:2.1.0
+```
+挂载目录会报错，就没有挂载目录
+
 安装所需库
 ```pip3
 pip3 install -r requirements.txt
@@ -18,7 +28,11 @@ python3 ip.py
 没有nodejs的使用这个
 ```shell
 python3 kill.py # 开启守护进程
-ps -ef|grep ip.py |grep -v grep|awk '{print $2}'|xargs kill -9 # 杀死守护进程
+# 杀死守护进程
+yum install lsof-y # 使用yum指令的
+apt install lsof-y # 使用apt指令的
+lsof -i:5001
+kill -9 进程号 # 进程号就是一串数字
 ```
 有nodejs的使用这个
 ```shell
@@ -92,11 +106,17 @@ https.get('https://ip.tool.lu/' , function (res) {
 
 配置文件中添加的
 ```shell
-urls="http://IP:端口/js" # 默认5001
-url=$(curl $urls)
-export GLOBAL_AGENT_HTTP_PROXY=$url
-export ALL_PROXY=$url
-echo "当前js代理" $url
+urls="http://ip:端口/js"
+url=$(curl -m 15 $urls)
+
+# 判断是否为空
+if [[ $url = http* ]]; then
+    export GLOBAL_AGENT_HTTP_PROXY=$url
+    export ALL_PROXY=$url
+    echo "当前js代理" $url
+else
+    echo "请求代理池接口失败"
+fi
 ```
 
 js里面添加的内容

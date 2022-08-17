@@ -13,7 +13,7 @@ def get_list():
     :return: 返回数组
     """
     try:
-        country = requests.get("http://www.proxydb.net/", headers=get_user_agent(), timeout=20)
+        country = requests.get("http://www.proxydb.net/", headers=get_user_agent(), timeout=20, verify=False)
         country.encoding = "utf-8"
         re1 = country.text
         re_country = re.compile(r'<option value="([A-Z]{2})">.*?\([1-9]\d*\)</option>')
@@ -32,7 +32,7 @@ def get_proxydb():
     try:
         lists = get_list()
         for j in lists:
-            reps = requests.get(f"http://proxydb.net/?country={j}", headers=get_user_agent(), timeout=20)
+            reps = requests.get(f"http://proxydb.net/?country={j}", headers=get_user_agent(), timeout=20, verify=False)
             # 设置编码
             reps.encoding = "utf-8"
             re1 = reps.text

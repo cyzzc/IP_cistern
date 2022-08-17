@@ -3,6 +3,7 @@ import re
 import requests
 
 from com.other.conn import revise_yaml
+from com.other.log import log_ip
 
 
 def country_ip(proxies=None):
@@ -14,9 +15,9 @@ def country_ip(proxies=None):
     global ip
     try:
         if proxies is None:
-            ip = requests.get("https://ip.tool.lu/", timeout=15)
+            ip = requests.get("https://ip.tool.lu/", timeout=15, verify=False)
         elif proxies != 1:
-            ip = requests.get("https://ip.tool.lu/", proxies=proxies, timeout=15)
+            ip = requests.get("https://ip.tool.lu/", proxies=proxies, timeout=15, verify=False)
         iptx = ip.text
         ip.close()
         geography = re.findall(r'归属地:\s*(\w+\s*\w+)\s*', iptx)
@@ -40,6 +41,7 @@ def country_revise():
     :return:
     """
     coun = country_ip()
+    log_ip("你服务器所在国家是 " + coun)
     if coun != "中国" and coun != -1:
         revise_yaml("country: 国外", 8)
     else:

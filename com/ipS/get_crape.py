@@ -9,7 +9,7 @@ from com.pysqlit.py3 import insert_data
 
 def get_crape():
     try:
-        reps = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=all", headers=get_user_agent(), timeout=10, proxies={'https': 'http://127.0.0.1:10809'})
+        reps = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=all", headers=get_user_agent(), timeout=10, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
