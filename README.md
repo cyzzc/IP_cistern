@@ -108,15 +108,8 @@ https.get('https://ip.tool.lu/' , function (res) {
 ```shell
 urls="http://ip:端口/js"
 url=$(curl -m 15 $urls)
-
-# 判断是否为空
-if [[ $url = http* ]]; then
-    export GLOBAL_AGENT_HTTP_PROXY=$url
-    export ALL_PROXY=$url
-    echo "当前js代理" $url
-else
-    echo "请求代理池接口失败"
-fi
+export GLOBAL_AGENT_HTTP_PROXY=$url
+export ALL_PROXY=$url
 ```
 
 js里面添加的内容
