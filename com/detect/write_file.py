@@ -16,12 +16,13 @@ data = read_yaml()
 # 获取节点
 def read_node():
     """
-    按照顺序查找可用节点
+    随机IP，为了避免很多人同时使用一个IP
     :return: 返回协议://ip:端口，如果都不可用返回-1
     """
     sql = select_Location()
     for i in range(len(sql)):
-        random_ip = sql[i][3] + "://" + sql[i][0]
+        randomnum = random.randint(0, len(sql) - 1)
+        random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
         proxies = {
             'http': random_ip,
             'https': random_ip
@@ -54,23 +55,29 @@ def check_node():
     """
     sql = select_Location("中国")
     try:
-        # 第一次使用随机IP，诺随机IP不可用，按顺序获取IP
-        randomnum = random.randint(0, len(sql) - 1)
-        random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
-        proxies = {
-            'http': random_ip,
-            'https': random_ip
-        }
-        try:
-            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
-            if output1.status_code == 200:
-                output1.close()
-                return random_ip
-        except Exception as e:
-            # 节点如果不可用，则删除节点
-            delete_one_data(sql[randomnum][0])
-            return read_node()
+        # 判断返回的是不是数组
+        if isinstance(sql, list):
+            # 判断数组长度是否大于3
+            if len(sql) > 3:
+                # 第一次使用随机IP，诺随机IP不可用，按顺序获取IP
+                randomnum = random.randint(0, len(sql) - 1)
+                random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
 
+                proxies = {
+                    'http': random_ip,
+                    'https': random_ip
+                }
+                try:
+                    output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
+                    if output1.status_code == 200:
+                        output1.close()
+                        return random_ip
+                except Exception as e:
+                    # 节点如果不可用，则删除节点
+                    delete_one_data(sql[randomnum][0])
+                    return read_node()
+        # 走到这里说明不复合上面的条件
+        return read_node()
     except Exception as e:
         log_ip("节点池中没有节点代理池可能不能使用了，check_node：" + str(e))
         return -1

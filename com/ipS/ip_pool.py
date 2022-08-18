@@ -7,7 +7,7 @@ from com.other.log import log_ip
 from com.pysqlit.py3 import insert_data
 
 
-def get_ip():
+def get_uu_proxy():
     """
     爬取的IP池地址
     :return:
