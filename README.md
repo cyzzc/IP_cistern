@@ -4,7 +4,7 @@
 ## 此文档默认为最新文档，同步脚本更新此文档
 #### 本脚本可能有一些其他问题存在，出现问题请反馈，容器版本会尽快发布
 ## 运行脚本
-容器安装
+### 容器安装
 ```shell
 docker run -dit \
   -p 5001:5001 \
@@ -14,6 +14,14 @@ docker run -dit \
 ```
 挂载目录会报错，就没有挂载目录
 
+### 接口
+```shell
+# 代理接口
+http://IP:端口/http
+# 日志接口
+http://IP:端口/log
+```
+## 自己搭建教程
 安装所需库
 ```pip3
 pip3 install -r requirements.txt
@@ -45,9 +53,8 @@ pm2 restart ID # 重启获取输入的ID pm2 restart 3
 脚本自动添加守护进程，只需python3 kill.py即可，请勿再添加守护进程，使用python3 kill.py可以杀死原来全部ip_broker.py的所有守护进程，而后创建新的
 运行后请查看ql.log日志是否有异常信息
 
-## [青龙代理视频演示和使用教程](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
 
-## 文件配置conn.yml
+##### 文件配置conn.yml
 
 ```text
 第2行占用端口号
@@ -56,8 +63,9 @@ pm2 restart ID # 重启获取输入的ID pm2 restart 3
 ```
 **如果使用nodejs的pm2执行将ip.yml 并且修改PORT和conn.yml第二行端口一致**
 
-
-## 青龙面板添加依赖
+## 接口配置
+### [青龙代理视频演示和使用教程](https://www.youtube.com/playlist?list=PLH5cFwS6-yF-yDy-eGA3nVVa-2Nl43ZKk)
+### 青龙面板添加依赖
 
 依赖管理-->nodejs-->新建依赖
 ```text
@@ -255,6 +263,8 @@ http://httpbin.org/ip 显示IP的
     > 现在启动程序不会卡住，get代理秒回应
     > 增加了线程池+双监听线程，获取iplist更快而且存活率也得到了保证
     > 国内IP大于4个才会返回国内代理，否则获取随机代理，主要预防很多人用一个IP导致黑IP和黑号
+    > 添加日志显示
+    > js改成http, 添加log日志接口
   </code></pre>
 </details>
 
