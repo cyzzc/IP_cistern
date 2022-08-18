@@ -91,8 +91,14 @@ print("检测到的IP", aas.text)
 #### nodejs 检测代理是否添加成功
 在青龙脚本管理-->新建脚本-->ip.js
 ```javascript
-const {bootstrap, globalTunnel} = require("global-agent");
-bootstrap();
+htt = process.env.GLOBAL_AGENT_HTTP_PROXY
+    ? process.env.GLOBAL_AGENT_HTTP_PROXY
+    : '';
+// 判断activityUrl中是否有http://127.0.0.1 和长度大于16
+if (null == htt.match('127\.0\.0\.1') && htt.length > 16) {
+    const {bootstrap, globalTunnel} = require("global-agent");
+    bootstrap();
+}
 const https = require("https");
 https.get('https://ip.tool.lu/' , function (res) {
     console.log('statusCode:', res.statusCode);
@@ -122,8 +128,14 @@ fi
 
 js里面添加的内容
 ```javascript
-const {bootstrap, globalTunnel} = require("global-agent");
-bootstrap();
+htt = process.env.GLOBAL_AGENT_HTTP_PROXY
+    ? process.env.GLOBAL_AGENT_HTTP_PROXY
+    : '';
+// 判断activityUrl中是否有http://127.0.0.1 和长度大于16
+if (null == htt.match('127\.0\.0\.1') && htt.length > 16) {
+    const {bootstrap, globalTunnel} = require("global-agent");
+    bootstrap();
+}
 ```
 ```text
 所有js脚本都会调用jdCookie.js的内容获取青龙的CK
