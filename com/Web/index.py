@@ -1,10 +1,13 @@
+
 from flask import Flask
 
 from com.detect.write_file import check_node
 from com.other.conn import read_yaml
+from com.other.log import rz
 
 port = read_yaml()
 app = Flask(__name__)
+
 
 
 @app.route("/")
@@ -12,8 +15,13 @@ def index():
     return "你好本程序运行正常运行"
 
 
+@app.route('/log', methods=['GET'])
+def hello():
+    return rz()
+
+
 # 接收get请求 /js
-@app.route("/js", methods=["GET"])
+@app.route("/http", methods=["GET"])
 def js():
     """
     代理的接口
