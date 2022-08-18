@@ -115,6 +115,9 @@ if [ ${substr} = htt ]; then
     echo $url
 else
     echo "请求代理池接口失败"
+    export GLOBAL_AGENT_HTTP_PROXY=http://青龙IP和端口
+    export ALL_PROXY=http://青龙IP和端口
+fi
 fi
 ```
 
