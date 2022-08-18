@@ -31,7 +31,7 @@ def read_node():
         try:
             s = requests.session()
             s.keep_alive = False
-            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
+            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
             if output1.status_code == 200:
                 output1.close()
                 return random_ip
@@ -68,7 +68,7 @@ def check_node():
                     'https': random_ip
                 }
                 try:
-                    output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
+                    output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
                     if output1.status_code == 200:
                         output1.close()
                         return random_ip

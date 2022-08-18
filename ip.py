@@ -64,7 +64,7 @@ def get_ip():
     # 下面是适配非国内环境的代理
     if area['country'] != '国内':
         all_task_list.append(pool.submit(ip_db.get("get_crape")))
-
+    log_ip("开始爬取ip")
     # wait(all_task_list, return_when=ALL_COMPLETED)
     # 测试代理
     # check_ip()
@@ -74,6 +74,7 @@ def check_add_ip_thread():
     """
     监听添加线程
     """
+    log_ip("监听筛选池线程启动成功")
     count = 1
     while True:
         time.sleep(count)
@@ -86,13 +87,14 @@ def check_add_ip_thread():
                 lock.release()
         else:
             if count < 15:
-                count = +1
+                count = +2
 
 
 def check_exist_ip_thread():
     """
     监听ip存活线程
     """
+    log_ip("监听ip池存活线程启动成功")
     while True:
         time.sleep(121)
         sql = select_data(surface='acting')
@@ -129,13 +131,14 @@ def timing_ck():
         if len(sql) <= 5:
             get_ip()
         else:
-            log_ip("数据长度大于6条，不需要重新爬取")
+            log_ip(f"ip数据还有{len(sql)}条，不需要重新爬取")
     else:
         log_ip("数据库中没有数据，重新爬取")
         get_ip()
 
 
 if __name__ == '__main__':
+    log_ip("===程序开始运行===")
     # 判断是否是国外环境以此来决定是否爬取国外代理池
     country_revise()
     #  timed_thread可能存在未知BUG，如果不取消代理请删除

@@ -26,6 +26,7 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
         # 检测节点是否可用.多次检测，如果可用，就把节点添加到字典中，检测多个防止代理无效，主要用于京东使用代理验证京东网址是否支持代理
         # 请求超过3秒，就认为节点不可用
         requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=10).close()
+        requests.get("https://api.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=10).close()
         location = country_ip(proxies)
         lock.acquire()
         # 检测成功添加到可用代理的数据库中
