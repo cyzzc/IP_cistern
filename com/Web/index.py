@@ -21,7 +21,7 @@ def js():
     """
     result = check_node()
     # 若检查不过，返回127.0.0.1
-    return result if result != -1 else '127.0.0.1'
+    return result if result != -1 else 'http://127.0.0.1'
 
 
 def run_web():
