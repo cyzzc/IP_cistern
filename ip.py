@@ -49,7 +49,7 @@ def get_ip():
         "get_v1": get_v1,
         "get_jxl": get_jxl,
         "get_proxydb": get_proxydb,
-        "get_proxynova": get_proxynova,
+        # "get_proxynova": get_proxynova, 不能使用去方法里面查看异常信息
         "get_crape": get_crape  # 适配非国内环境的代理
     }
     for task in ip_db.keys():

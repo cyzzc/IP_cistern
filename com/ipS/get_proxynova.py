@@ -4,6 +4,11 @@ from com.pysqlit.py3 import insert_data
 
 
 def get_proxynova(area="CN"):
+    """
+    不能使用直接异常 Browser closed unexpectedly:
+    :param area:
+    :return:
+    """
     try:
         if area == ' ':
             proxies = get_proxies()

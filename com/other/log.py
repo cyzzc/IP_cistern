@@ -22,8 +22,8 @@ def log_ip(data):
 
 
 def dele_ip():
-    # 当文件大于5M时，删除文件
-    if os.path.getsize(path) > 5242880:
+    # 当文件大于3M时，删除文件
+    if os.path.getsize(path) > 3242880:
         os.remove(path)
 
 

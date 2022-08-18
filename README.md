@@ -10,9 +10,16 @@ docker run -dit \
   -p 5001:5001 \
   --name http \
   --restart unless-stopped \
-  xgzk/httpproxy:2.1.0
+  xgzk/httpproxy:2.2.0
 ```
 挂载目录会报错，就没有挂载目录
+
+### 之前拉取旧版本容器的卸载
+```shell
+docker kill http
+docker rm -f http
+docker rmi -f xgzk/httpproxy:2.1.0 #2.0.1是版本号,
+```
 
 ### 接口
 ```shell
