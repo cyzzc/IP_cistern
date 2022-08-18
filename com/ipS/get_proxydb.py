@@ -1,4 +1,5 @@
 import re
+import time
 
 import requests
 
@@ -32,6 +33,7 @@ def get_proxydb():
     try:
         lists = get_list()
         for j in lists:
+            time.sleep(1.8)
             reps = requests.get(f"http://proxydb.net/?country={j}", headers=get_user_agent(), timeout=20, verify=False)
             # 设置编码
             reps.encoding = "utf-8"

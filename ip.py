@@ -1,4 +1,8 @@
+import threading
+import time
+
 from flask_apscheduler import APScheduler
+from concurrent.futures import ThreadPoolExecutor
 
 from com.Web.index import run_web
 from com.ipS.get_crape import get_crape
@@ -7,42 +11,96 @@ from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
 from com.ipS.get_proxydb import get_proxydb
 from com.ipS.get_proxylist import get_fate
+from com.ipS.get_proxynova import get_proxynova
 from com.ipS.get_pzzqz import get_pzz
 from com.ipS.get_scan import get_scan
 from com.ipS.get_v1 import get_v1
 from com.ipS.git_poxy import get_git_ip
 from com.detect.http_re import check_ip
-from com.ipS.ip_pool import get_ip
+from com.ipS.ip_pool import get_uu_proxy
 from com.other.conn import read_yaml
 from com.other.country import country_revise
 from com.other.log import log_ip
 from com.pysqlit.py3 import select_data
 
 scheduler = APScheduler()
+pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
+lock = threading.Lock()
 
 
-def ip():
+def get_ip():
     """
     执行爬取
     :return:
     """
+    all_task_list = []
     area = read_yaml()
     # 获取代理
-    get_ip()
-    get_git_ip()
-    get_fate()
-    get_pzz()
-    get_scan()
-    get_kuai()
-    get_ip3366()
-    get_v1()
-    get_jxl()
-    get_proxydb()
+    ip_db = {
+        "get_ip": get_uu_proxy,
+        "get_git_ip": get_git_ip,
+        "get_fate": get_fate,
+        "get_pzz": get_pzz,
+        "get_scan": get_scan,
+        "get_kuai": get_kuai,
+        "get_ip3366": get_ip3366,
+        "get_v1": get_v1,
+        "get_jxl": get_jxl,
+        "get_proxydb": get_proxydb,
+        "get_proxynova": get_proxynova,
+        "get_crape": get_crape  # 适配非国内环境的代理
+    }
+    for task in ip_db.keys():
+        not_included = ["get_crape"]
+        # 本身携带异步且有handle的，丢进线程池会有bug
+        not_in_pool = ["get_proxynova"]
+        if task not in not_included and task not in not_in_pool:
+            # print("任务提交:" + task)
+            all_task_list.append(pool.submit(ip_db.get(task)))
+        if task in not_in_pool:
+            # print("任务执行:" + task)
+            ip_db.get(task)()
+
     # 下面是适配非国内环境的代理
     if area['country'] != '国内':
-        get_crape()
+        all_task_list.append(pool.submit(ip_db.get("get_crape")))
+
+    # wait(all_task_list, return_when=ALL_COMPLETED)
     # 测试代理
-    check_ip()
+    # check_ip()
+
+
+def check_add_ip_thread():
+    """
+    监听添加线程
+    """
+    count = 1
+    while True:
+        time.sleep(count)
+        sql = select_data(surface='filter')
+        if type(sql) == list:
+            if len(sql) >= 5:
+                lock.acquire()
+                check_ip()
+                count = 1
+                lock.release()
+        else:
+            if count < 15:
+                count = +1
+
+
+def check_exist_ip_thread():
+    """
+    监听ip存活线程
+    """
+    while True:
+        time.sleep(121)
+        sql = select_data(surface='acting')
+        if type(sql) == list:
+            if len(sql) >= 0:
+                lock.acquire()
+                check_ip("acting")
+                lock.release()
 
 
 @scheduler.task('interval', id='implement', hours=1)
@@ -52,7 +110,7 @@ def implement():
     :return:
     """
     try:
-        ip()
+        get_ip()
     except Exception as e:
         log_ip("定时任务报错" + str(e))
 
@@ -69,12 +127,12 @@ def timing_ck():
     if type(sql) == list:
         # 如果数据长度不大于6条，就重新爬取
         if len(sql) <= 5:
-            ip()
+            get_ip()
         else:
             log_ip("数据长度大于6条，不需要重新爬取")
     else:
         log_ip("数据库中没有数据，重新爬取")
-        ip()
+        get_ip()
 
 
 if __name__ == '__main__':
@@ -83,4 +141,8 @@ if __name__ == '__main__':
     #  timed_thread可能存在未知BUG，如果不取消代理请删除
     timing_ck()
     scheduler.start()
+    t1 = threading.Thread(target=check_add_ip_thread)
+    t2 = threading.Thread(target=check_exist_ip_thread)
+    t1.start()
+    t2.start()
     run_web()
