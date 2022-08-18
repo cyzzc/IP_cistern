@@ -31,7 +31,7 @@ def read_node():
         try:
             s = requests.session()
             s.keep_alive = False
-            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
+            output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=5)
             if output1.status_code == 200:
                 output1.close()
                 return random_ip
@@ -67,15 +67,7 @@ def check_node():
                     'http': random_ip,
                     'https': random_ip
                 }
-                try:
-                    output1 = requests.get("https://plogin.m.jd.com/", proxies=proxies, headers=get_user_agent(), timeout=3)
-                    if output1.status_code == 200:
-                        output1.close()
-                        return random_ip
-                except Exception as e:
-                    # 节点如果不可用，则删除节点
-                    delete_one_data(sql[randomnum][0])
-                    return read_node()
+                return random_ip
         # 走到这里说明不复合上面的条件
         return read_node()
     except Exception as e:
