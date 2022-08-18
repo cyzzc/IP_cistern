@@ -19,7 +19,9 @@ def js():
     代理的接口
     :return: 返回协议://ip:端口
     """
-    return check_node()
+    result = check_node()
+    # 若检查不过，返回空代理
+    return result if result != -1 else ' '
 
 
 def run_web():

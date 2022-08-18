@@ -23,12 +23,12 @@ def get_66ip():
         re_port = re.compile(r'</td>\n?<td>(\d{2,6})</td>\n?<td>')
         http_ip = re_ip.findall(re1)
         http_port = re_port.findall(re1)
-        print(http_ip)
-        print(http_port)
-        print(len(http_ip))
-        print(len(http_port))
+        # print(http_ip)
+        # print(http_port)
+        # print(len(http_ip))
+        # print(len(http_port))
         for i in range(len(http_ip)):
             insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), "http",
-                            "CN", 'filter')
+                        "CN", 'filter')
     except Exception as e:
         log_ip("异常问题，com-->ipS-->get_66ip.py: " + str(e))
