@@ -5,6 +5,7 @@ from com.other.conn import read_yaml
 # 创建数据库方法
 from com.other.log import log_ip
 
+db_path = read_yaml()["db"]
 
 def create_db():
     """
@@ -13,7 +14,7 @@ def create_db():
     """
     try:
         # 创建数据库
-        db = sqlite3.connect(read_yaml()["db"])
+        db = sqlite3.connect(db_path)
         # 创建游标
         cursor = db.cursor()
         return cursor, db

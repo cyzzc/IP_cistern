@@ -2,7 +2,7 @@ import threading
 import time
 
 from flask_apscheduler import APScheduler
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 from com.Web.index import run_web
 from com.ipS.get_crape import get_crape
@@ -26,6 +26,7 @@ from com.pysqlit.py3 import select_data
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
 lock = threading.Lock()
+all_task_list = []
 
 
 def get_ip():
@@ -33,8 +34,9 @@ def get_ip():
     执行爬取
     :return:
     """
-    all_task_list = []
+    global all_task_list
     area = read_yaml()
+    all_task_list = []
     # 获取代理
     ip_db = {
         "get_ip": get_uu_proxy,
@@ -96,7 +98,7 @@ def check_exist_ip_thread():
     """
     log_ip("监听ip池存活线程启动成功")
     while True:
-        time.sleep(121)
+        time.sleep(35)
         sql = select_data(surface='acting')
         if type(sql) == list:
             if len(sql) >= 0:
@@ -123,6 +125,7 @@ def timing_ck():
     定时任务 每⑤分钟检测一次
     :return:
     """
+    wait(all_task_list, return_when=ALL_COMPLETED)
     # 用来获取数据长度
     sql = select_data()
     # 检测返回的类型
