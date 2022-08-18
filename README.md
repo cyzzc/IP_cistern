@@ -118,7 +118,6 @@ else
     export GLOBAL_AGENT_HTTP_PROXY=http://青龙IP和端口
     export ALL_PROXY=http://青龙IP和端口
 fi
-fi
 ```
 
 js里面添加的内容
