@@ -68,8 +68,8 @@ def check_node():
                     'https': random_ip
                 }
                 return random_ip
-        # 走到这里说明不复合上面的条件
-        return read_node()
+            # 走到这里说明不复合上面的条件
+            return read_node()
     except Exception as e:
         log_ip("节点池中没有节点代理池可能不能使用了，check_node：" + str(e))
         return -1
