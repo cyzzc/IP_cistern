@@ -34,7 +34,7 @@ def get_proxydb():
     try:
         lists = get_list()
         for j in lists:
-            time.sleep(1.8)
+            time.sleep(5)
             print("正在获取代理池的代理，爬取所有国家")
             reps = requests.get(f"http://proxydb.net/?country={j}", headers=get_user_agent(), timeout=20, verify=False)
             # 设置编码
