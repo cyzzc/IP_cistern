@@ -76,7 +76,7 @@ async def _get_page_content(url: str):
         Returns:
             a string containing the html code
     """
-    browser = await launch(headless=True)
+    browser = await launch(headless=True, args=['--no-sandbox'])
     page = await browser.newPage()
     try:
         await page.goto(url, {"waitUntil": "load"})

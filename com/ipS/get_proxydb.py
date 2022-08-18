@@ -22,7 +22,7 @@ def get_list():
         http_country = re_country.findall(re1)
         return http_country
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_proxydb.py-->get_list: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_proxydb.py-->get_list: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
         return []
 
 
@@ -34,7 +34,7 @@ def get_proxydb():
     try:
         lists = get_list()
         for j in lists:
-            time.sleep(1.8)
+            time.sleep(5)
             print("正在获取代理池的代理，爬取所有国家")
             reps = requests.get(f"http://proxydb.net/?country={j}", headers=get_user_agent(), timeout=20, verify=False)
             # 设置编码
@@ -56,4 +56,4 @@ def get_proxydb():
                     insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_type[i],
                                 "SU", 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_proxydb.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_proxydb.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

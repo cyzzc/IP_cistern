@@ -24,4 +24,4 @@ def get_v1():
             insert_data(http_ip[v] + ':' + http_port[v], http_ip[v], int(http_port[v]), 'http',
                         'CN', 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_v1.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_v1.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

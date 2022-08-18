@@ -2,7 +2,7 @@ import threading
 import time
 
 from flask_apscheduler import APScheduler
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 from com.Web.index import run_web
 from com.ipS.get_crape import get_crape
@@ -19,13 +19,14 @@ from com.ipS.git_poxy import get_git_ip
 from com.detect.http_re import check_ip
 from com.ipS.ip_pool import get_uu_proxy
 from com.other.conn import read_yaml
-from com.other.country import country_revise
+from com.other.country import country_revise, aglevel
 from com.other.log import log_ip
 from com.pysqlit.py3 import select_data
 
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
 lock = threading.Lock()
+all_task_list = []
 
 
 def get_ip():
@@ -33,8 +34,9 @@ def get_ip():
     执行爬取
     :return:
     """
-    all_task_list = []
+    global all_task_list
     area = read_yaml()
+    all_task_list = []
     # 获取代理
     ip_db = {
         "get_ip": get_uu_proxy,
@@ -96,13 +98,22 @@ def check_exist_ip_thread():
     """
     log_ip("监听ip池存活线程启动成功")
     while True:
-        time.sleep(121)
+        time.sleep(35)
         sql = select_data(surface='acting')
         if type(sql) == list:
             if len(sql) >= 0:
                 lock.acquire()
                 check_ip("acting")
                 lock.release()
+
+
+@scheduler.task('interval', id='conn_random', days=1)
+def conn_random():
+    """
+    AGleve随机数
+    :return:
+    """
+    aglevel()
 
 
 @scheduler.task('interval', id='implement', hours=1)
@@ -123,6 +134,7 @@ def timing_ck():
     定时任务 每⑤分钟检测一次
     :return:
     """
+    wait(all_task_list, return_when=ALL_COMPLETED)
     # 用来获取数据长度
     sql = select_data()
     # 检测返回的类型
@@ -131,14 +143,14 @@ def timing_ck():
         if len(sql) <= 5:
             get_ip()
         else:
-            log_ip(f"ip数据还有{len(sql)}条，不需要重新爬取")
+            log_ip(f'ip数据还有<b style="color: rgb(255, 0, 255); font-weight: bolder">{len(sql)}条</b>, 不需要重新爬取')
     else:
         log_ip("数据库中没有数据，重新爬取")
         get_ip()
 
 
 if __name__ == '__main__':
-    log_ip("===程序开始运行===")
+    log_ip('<h1 style="color: rgb(111, 255, 0);">===程序开始运行===</h1>')
     # 判断是否是国外环境以此来决定是否爬取国外代理池
     country_revise()
     #  timed_thread可能存在未知BUG，如果不取消代理请删除

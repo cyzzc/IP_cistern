@@ -13,7 +13,7 @@ def get_66ip():
     :return:
     """
     try:
-        reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=10, verify=False)
+        reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
@@ -31,4 +31,4 @@ def get_66ip():
             insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), "http",
                         "CN", 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_66ip.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_66ip.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

@@ -11,7 +11,7 @@ def get_ip3366():
     try:
         for j in range(1, 10):
             try:
-                reps = requests.get(f"https://proxy.ip3366.net/free/?action=china&page={j}", headers=get_user_agent(), timeout=10, verify=False)
+                reps = requests.get(f"https://proxy.ip3366.net/free/?action=china&page={j}", headers=get_user_agent(), timeout=20, verify=False)
                 # 设置编码
                 reps.encoding = "utf-8"
                 re1 = reps.text
@@ -28,4 +28,4 @@ def get_ip3366():
             except Exception as e:
                 return 0
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_ip3366.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_ip3366.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

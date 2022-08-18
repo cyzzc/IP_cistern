@@ -1,8 +1,9 @@
+import random
 import re
 
 import requests
 
-from com.other.conn import revise_yaml
+from com.other.conn import revise_yaml, read_yaml
 from com.other.log import log_ip
 
 
@@ -40,9 +41,22 @@ def country_revise():
     根据国家不同·使用不同的代理池
     :return:
     """
+    read = read_yaml()
     coun = country_ip()
-    log_ip("你服务器所在国家是 " + coun)
+    log_ip("你服务器所在国家是 " + f'<b style="color: aqua; font-weight: bolder">{coun}</b>')
     if coun != "中国" and coun != -1:
-        revise_yaml("country: 国外", 8)
+        revise_yaml("country: 国外", read['Label']['country'])
     else:
-        revise_yaml("country: 国内", 8)
+        revise_yaml("country: 国内", read['Label']['country'])
+
+
+def aglevel():
+    """
+    获取1-3的随机数
+    :return:
+    """
+    read = read_yaml()
+    # 获取1-3之间的随机数
+    ra = random.randint(1, 3)
+    revise_yaml(f"country: {ra}", read['Label']['AGlevel'])
+    log_ip(f"AGlevel更新为{ra}")

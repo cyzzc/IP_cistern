@@ -35,4 +35,4 @@ def get_fate():
                 insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
                             http_country[i], 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_kxdaili.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

@@ -31,4 +31,4 @@ def get_uu_proxy():
         strhtml.close()
 
     except Exception as e:
-        log_ip("异常提示,com-->ipS-->ip_pool.py: " + str(e))
+        log_ip("异常提示,com-->ipS-->ip_pool.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

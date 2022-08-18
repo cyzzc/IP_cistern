@@ -1,4 +1,3 @@
-
 from flask import Flask
 
 from com.detect.write_file import check_node
@@ -9,18 +8,17 @@ port = read_yaml()
 app = Flask(__name__)
 
 
-
 @app.route("/")
 def index():
     return "你好本程序运行正常运行"
 
 
 @app.route('/log', methods=['GET'])
-def hello():
+def cat_log():
     return rz()
 
 
-# 接收get请求 /js
+# 接收get请求 /http
 @app.route("/http", methods=["GET"])
 def js():
     """

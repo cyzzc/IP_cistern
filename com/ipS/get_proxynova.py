@@ -14,8 +14,8 @@ def get_proxynova(area="CN"):
         for i in range(len(proxies)):
             insert_data(proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
                         proxies[i].get('proxyIp'),
-                        int(proxies[i].get('proxyPort')), "HTTP",
+                        int(proxies[i].get('proxyPort')), "http",
                         proxies[1].get('proxyCountry'), 'filter')
 
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_proxynova.py: " + str(e))
+        log_ip("异常问题，com-->ipS-->get_proxynova.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
