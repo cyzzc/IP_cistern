@@ -71,6 +71,8 @@ def get_ip():
         all_task_list.append(pool.submit(ip_db.get("get_crape")))
     log_ip("开始爬取ip")
     getting_ip_flag = True
+    t3 = threading.Thread(target=check_all_task_list_thread)
+    t3.start()
     # wait(all_task_list, return_when=ALL_COMPLETED)
     # 测试代理
     # check_ip()
@@ -172,8 +174,6 @@ if __name__ == '__main__':
     scheduler.start()
     t1 = threading.Thread(target=check_add_ip_thread)
     t2 = threading.Thread(target=check_exist_ip_thread)
-    t3 = threading.Thread(target=check_all_task_list_thread)
     t1.start()
     t2.start()
-    t3.start()
     run_web()
