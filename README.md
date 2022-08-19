@@ -128,7 +128,7 @@ https.get('https://ip.tool.lu/' , function (res) {
 配置文件中添加的
 ```shell
 urls="http://ip:端口/js"
-url=$(curl -m 15 $urls)
+url=$(curl -m 30 $urls)
 substr=${url%%p*}
 if [ $substr = "htt" ]; then
     export GLOBAL_AGENT_HTTP_PROXY=$url
