@@ -26,11 +26,11 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
         'https': http_ip_port
     }
     try:
-        location = -1
         check_wb = [
             "https://plogin.m.jd.com/",
             "https://api.m.jd.com/",
-            "https://bean.m.jd.com"
+            "https://bean.m.jd.com",
+            "http://isvjcloud.com",  # 基本只能是国内代理
         ]
         # 检测节点是否可用.多次检测，如果可用，就把节点添加到字典中，检测多个防止代理无效，主要用于京东使用代理验证京东网址是否支持代理
         # 请求超过3秒，就认为节点不可用
@@ -42,20 +42,27 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
             location = country_ip(proxies)
             lock.acquire()
             # 检测成功添加到可用代理的数据库中
-            if location != -1 and sql_name == 'filter':
+            if location != -1:
                 insert_data(data[0], data[1], data[2], data[3], location)
             # 删除节点筛选
             delete_one_data(ip_port, sql_name)
             lock.release()
+        elif sql_name == 'acting':
+            if http_ip_port in del_ip_list:
+                # 如果正常了，那就不怀疑了XD
+                del_ip_list.remove(http_ip_port)
     except Exception as e:
         # 不做任何输出,删除不可用的节点
-        # print("kill-"+http_ip_port)
+        print("kill-" + sql_name + '-' + http_ip_port)
         lock.acquire()
-        if http_ip_port in del_ip_list:
+        if sql_name == 'acting':
+            if http_ip_port in del_ip_list:
+                delete_one_data(ip_port, sql_name)
+                del_ip_list.remove(http_ip_port)
+            else:
+                del_ip_list.append(http_ip_port)
+        elif sql_name == 'filter':
             delete_one_data(ip_port, sql_name)
-            del_ip_list.remove(http_ip_port)
-        else:
-            del_ip_list.append(http_ip_port)
         lock.release()
 
 
@@ -72,5 +79,6 @@ def check_ip(sql_name='filter'):
         threads.append(t)
     for t in threads:
         t.start()
-    for t in threads:
-        t.join()
+    # ip检测应该不需要同步
+    # for t in threads:
+    #     t.join()

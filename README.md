@@ -127,7 +127,7 @@ https.get('https://ip.tool.lu/' , function (res) {
 
 配置文件中添加的
 ```shell
-urls="http://ip:端口/js"
+urls="http://ip:端口/http"
 url=$(curl -m 30 $urls)
 substr=${url%%p*}
 if [ $substr = "htt" ]; then
