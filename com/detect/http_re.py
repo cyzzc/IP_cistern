@@ -1,4 +1,5 @@
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -9,6 +10,7 @@ from com.pysqlit.py3 import select_data, delete_one_data, insert_data
 
 AGlevel = read_yaml()["AGlevel"]
 lock = threading.Lock()
+# pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="check_ip_")
 del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
 
 
@@ -53,7 +55,7 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
                 del_ip_list.remove(http_ip_port)
     except Exception as e:
         # 不做任何输出,删除不可用的节点
-        print("kill-" + sql_name + '-' + http_ip_port)
+        # print("kill-" + sql_name + '-' + http_ip_port)
         lock.acquire()
         if sql_name == 'acting':
             if http_ip_port in del_ip_list:
@@ -76,9 +78,9 @@ def check_ip(sql_name='filter'):
     threads = []
     for i in sq:
         t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
+        # pool.submit(ip_db.get(task))
         threads.append(t)
     for t in threads:
         t.start()
-    # ip检测应该不需要同步
-    # for t in threads:
-    #     t.join()
+    for t in threads:
+        t.join()
