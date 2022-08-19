@@ -52,11 +52,11 @@ def country_revise():
 
 def aglevel():
     """
-    获取1-3的随机数
+    获取1-4的随机数
     :return:
     """
     read = read_yaml()
-    # 获取1-3之间的随机数
-    ra = random.randint(1, 3)
+    # 获取1-4之间的随机数
+    ra = random.randint(1, 4)
     revise_yaml(f"country: {ra}", read['Label']['AGlevel'])
     log_ip(f"AGlevel更新为{ra}")
