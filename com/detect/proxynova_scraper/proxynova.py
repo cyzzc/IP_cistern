@@ -104,7 +104,9 @@ def _get_proxies(country_code: str = None):
     else:
         url = "{}/{}/country-{}".format(PROXY_PROVIDER_BASE_URL,
                                         LATEST_PROXIES, country_code)
-    loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     content = loop.run_until_complete(_get_page_content(url))
     table = _get_table_by_id(_get_soup_instance(content), PROXY_TABLE_ID)
     return _extract_proxies(table)

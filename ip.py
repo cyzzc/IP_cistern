@@ -27,6 +27,7 @@ scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
 lock = threading.Lock()
 all_task_list = []
+getting_ip_flag = False
 
 
 def get_ip():
@@ -34,7 +35,9 @@ def get_ip():
     执行爬取
     :return:
     """
-    global all_task_list
+    global all_task_list, getting_ip_flag
+    if getting_ip_flag:
+        return
     area = read_yaml()
     all_task_list = []
     # 获取代理
@@ -49,7 +52,7 @@ def get_ip():
         "get_v1": get_v1,
         "get_jxl": get_jxl,
         "get_proxydb": get_proxydb,
-        # "get_proxynova": get_proxynova, 不能使用去方法里面查看异常信息
+        "get_proxynova": get_proxynova,  # 不能使用去方法里面查看异常信息
         "get_crape": get_crape  # 适配非国内环境的代理
     }
     for task in ip_db.keys():
@@ -67,9 +70,22 @@ def get_ip():
     if area['country'] != '国内':
         all_task_list.append(pool.submit(ip_db.get("get_crape")))
     log_ip("开始爬取ip")
+    getting_ip_flag = True
+    t3 = threading.Thread(target=check_all_task_list_thread)
+    t3.start()
     # wait(all_task_list, return_when=ALL_COMPLETED)
     # 测试代理
     # check_ip()
+
+
+def check_all_task_list_thread():
+    """
+    监听线程池任务线程，防止重复提交到任务池
+    """
+    global all_task_list, getting_ip_flag
+    wait(all_task_list, return_when=ALL_COMPLETED)
+    log_ip("爬取ip完毕")
+    getting_ip_flag = False
 
 
 def check_add_ip_thread():
@@ -134,7 +150,6 @@ def timing_ck():
     定时任务 每⑤分钟检测一次
     :return:
     """
-    wait(all_task_list, return_when=ALL_COMPLETED)
     # 用来获取数据长度
     sql = select_data()
     # 检测返回的类型
@@ -143,7 +158,8 @@ def timing_ck():
         if len(sql) <= 5:
             get_ip()
         else:
-            log_ip(f'ip数据还有<b style="color: rgb(255, 0, 255); font-weight: bolder">{len(sql)}条</b>, 不需要重新爬取')
+            log_ip(
+                f'ip数据还有<b style="color: rgb(255, 0, 255); font-weight: bolder">{len(sql)}条</b>, 不需要重新爬取')
     else:
         log_ip("数据库中没有数据，重新爬取")
         get_ip()
