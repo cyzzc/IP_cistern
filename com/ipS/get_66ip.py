@@ -1,4 +1,5 @@
 import re
+import time
 
 import requests
 
@@ -13,6 +14,7 @@ def get_66ip():
     :return:
     """
     try:
+        time.sleep(3)
         reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"

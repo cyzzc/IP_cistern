@@ -10,7 +10,7 @@ from com.pysqlit.py3 import select_data, delete_one_data, insert_data
 
 AGlevel = read_yaml()["AGlevel"]
 lock = threading.Lock()
-pool = ThreadPoolExecutor(max_workers=95, thread_name_prefix="check_ip_")
+pool = ThreadPoolExecutor(max_workers=200, thread_name_prefix="check_ip_")
 all_task_list = []
 getting_ip_flag = False
 del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）

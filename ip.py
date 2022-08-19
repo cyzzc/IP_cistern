@@ -5,7 +5,9 @@ from flask_apscheduler import APScheduler
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 from com.Web.index import run_web
+from com.ipS.get_66ip import get_66ip
 from com.ipS.get_crape import get_crape
+from com.ipS.get_github import get_github
 from com.ipS.get_ip3366 import get_ip3366
 from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
@@ -52,6 +54,8 @@ def get_ip():
         "get_v1": get_v1,
         "get_jxl": get_jxl,
         "get_proxydb": get_proxydb,
+        "get_66ip": get_66ip,  # 小心被拉黑
+        "get_github": get_github,
         "get_proxynova": get_proxynova,  # 不能使用去方法里面查看异常信息
         "get_crape": get_crape  # 适配非国内环境的代理
     }
