@@ -3,12 +3,9 @@
 """
 import random
 
-import requests
-
 from com.other.conn import read_yaml
-from com.other.heade import get_user_agent
 from com.other.log import log_ip
-from com.pysqlit.py3 import delete_one_data, select_Location
+from com.pysqlit.py3 import select_Location
 
 data = read_yaml()
 

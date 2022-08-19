@@ -9,6 +9,7 @@ from com.pysqlit.py3 import select_data, delete_one_data, insert_data
 
 AGlevel = read_yaml()["AGlevel"]
 lock = threading.Lock()
+del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
 
 
 def http_request(http_ip_port, ip_port, data, sql_name='filter'):
@@ -36,7 +37,7 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
         # print(AGlevel)
         for i in range(0, AGlevel):
             requests.get(check_wb[i], proxies=proxies, headers=get_user_agent(), allow_redirects=False,
-                         timeout=20)
+                         timeout=20, verify=False)
         if sql_name == 'filter':
             location = country_ip(proxies)
             lock.acquire()
@@ -50,7 +51,11 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
         # 不做任何输出,删除不可用的节点
         # print("kill-"+http_ip_port)
         lock.acquire()
-        delete_one_data(ip_port, sql_name)
+        if http_ip_port in del_ip_list:
+            delete_one_data(ip_port, sql_name)
+            del_ip_list.remove(http_ip_port)
+        else:
+            del_ip_list.append(http_ip_port)
         lock.release()
 
 
