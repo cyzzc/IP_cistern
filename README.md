@@ -130,7 +130,7 @@ https.get('https://ip.tool.lu/' , function (res) {
 urls="http://ip:端口/js"
 url=$(curl -m 15 $urls)
 substr=${url%%p*}
-if [ ${substr} = htt ]; then
+if [ $substr = "htt" ]; then
     export GLOBAL_AGENT_HTTP_PROXY=$url
     export ALL_PROXY=$url
     echo $url
