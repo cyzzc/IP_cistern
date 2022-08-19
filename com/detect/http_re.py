@@ -1,5 +1,5 @@
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 import requests
 
@@ -10,7 +10,9 @@ from com.pysqlit.py3 import select_data, delete_one_data, insert_data
 
 AGlevel = read_yaml()["AGlevel"]
 lock = threading.Lock()
-# pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="check_ip_")
+pool = ThreadPoolExecutor(max_workers=95, thread_name_prefix="check_ip_")
+all_task_list = []
+getting_ip_flag = False
 del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
 
 
@@ -74,13 +76,13 @@ def check_ip(sql_name='filter'):
     :param sql_name:
     :return:
     """
-    sq = select_data(sql_name)
-    threads = []
-    for i in sq:
-        t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
-        # pool.submit(ip_db.get(task))
-        threads.append(t)
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
+    global all_task_list, getting_ip_flag
+    if not getting_ip_flag:
+        sq = select_data(sql_name)
+        for i in sq:
+            # t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
+            all_task_list.append(pool.submit(http_request, i[3] + "://" + i[0], i[0], i, sql_name))
+        getting_ip_flag = True
+        wait(all_task_list, return_when=ALL_COMPLETED)
+        all_task_list = []
+        getting_ip_flag = False

@@ -114,7 +114,7 @@ def check_exist_ip_thread():
     """
     log_ip("监听ip池存活线程启动成功")
     while True:
-        time.sleep(120)  # 太快容易被拉黑
+        time.sleep(35)  # 太快容易被拉黑
         sql = select_data(surface='acting')
         if type(sql) == list:
             if len(sql) >= 0:

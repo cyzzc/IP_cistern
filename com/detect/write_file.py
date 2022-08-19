@@ -2,6 +2,7 @@
 请求后用于返回IP处理地方
 """
 import random
+import time
 
 from com.other.conn import read_yaml
 from com.other.log import log_ip
@@ -30,6 +31,9 @@ def check_node():
     :return: 返回协议://ip:端口 没有返回-1
     """
     sql = select_Location("中国")
+    if sql == -1:
+        time.sleep(random.uniform(0.8, 2.8))
+        select_Location("中国")
     try:
         # 判断返回的是不是数组
         if isinstance(sql, list):
