@@ -15,7 +15,7 @@ def create_db():
     """
     try:
         # 创建数据库
-        db = sqlite3.connect(db_path)
+        db = sqlite3.connect(db_path, timeout=10)
         # 创建游标
         cursor = db.cursor()
         return cursor, db
