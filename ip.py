@@ -5,7 +5,9 @@ from flask_apscheduler import APScheduler
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 from com.Web.index import run_web
+from com.ipS.get_66ip import get_66ip
 from com.ipS.get_crape import get_crape
+from com.ipS.get_github import get_github
 from com.ipS.get_ip3366 import get_ip3366
 from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
@@ -25,7 +27,6 @@ from com.pysqlit.py3 import select_data
 
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
-lock = threading.Lock()
 all_task_list = []
 getting_ip_flag = False
 
@@ -52,6 +53,8 @@ def get_ip():
         "get_v1": get_v1,
         "get_jxl": get_jxl,
         "get_proxydb": get_proxydb,
+        "get_66ip": get_66ip,  # 小心被拉黑
+        "get_github": get_github,
         "get_proxynova": get_proxynova,  # 不能使用去方法里面查看异常信息
         "get_crape": get_crape  # 适配非国内环境的代理
     }
@@ -99,10 +102,8 @@ def check_add_ip_thread():
         sql = select_data(surface='filter')
         if type(sql) == list:
             if len(sql) >= 5:
-                lock.acquire()
                 check_ip()
                 count = 1
-                lock.release()
         else:
             if count < 15:
                 count = +2
@@ -118,9 +119,7 @@ def check_exist_ip_thread():
         sql = select_data(surface='acting')
         if type(sql) == list:
             if len(sql) >= 0:
-                lock.acquire()
                 check_ip("acting")
-                lock.release()
 
 
 @scheduler.task('interval', id='conn_random', days=1)

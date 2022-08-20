@@ -1,4 +1,3 @@
-import threading
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 import requests
@@ -9,8 +8,7 @@ from com.other.heade import get_user_agent
 from com.pysqlit.py3 import select_data, delete_one_data, insert_data
 
 AGlevel = read_yaml()["AGlevel"]
-lock = threading.Lock()
-pool = ThreadPoolExecutor(max_workers=95, thread_name_prefix="check_ip_")
+pool = ThreadPoolExecutor(max_workers=200, thread_name_prefix="check_ip_")
 all_task_list = []
 getting_ip_flag = False
 del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
@@ -44,21 +42,22 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
                          timeout=20, verify=False)
         if sql_name == 'filter':
             location = country_ip(proxies)
-            lock.acquire()
             # 检测成功添加到可用代理的数据库中
             if location != -1:
                 insert_data(data[0], data[1], data[2], data[3], location)
             # 删除节点筛选
             delete_one_data(ip_port, sql_name)
-            lock.release()
         elif sql_name == 'acting':
+            if data[4] == "None":
+                # 重新查国家
+                location = country_ip(proxies)
+                insert_data(data[0], data[1], data[2], data[3], location)
             if http_ip_port in del_ip_list:
                 # 如果正常了，那就不怀疑了XD
                 del_ip_list.remove(http_ip_port)
     except Exception as e:
         # 不做任何输出,删除不可用的节点
         # print("kill-" + sql_name + '-' + http_ip_port)
-        lock.acquire()
         if sql_name == 'acting':
             if http_ip_port in del_ip_list:
                 delete_one_data(ip_port, sql_name)
@@ -67,7 +66,6 @@ def http_request(http_ip_port, ip_port, data, sql_name='filter'):
                 del_ip_list.append(http_ip_port)
         elif sql_name == 'filter':
             delete_one_data(ip_port, sql_name)
-        lock.release()
 
 
 def check_ip(sql_name='filter'):
