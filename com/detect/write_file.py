@@ -9,6 +9,7 @@ from com.other.log import log_ip
 from com.pysqlit.py3 import select_Location
 
 data = read_yaml()
+last_choice = []
 
 
 # 获取节点
@@ -20,6 +21,7 @@ def read_node():
     sql = select_Location()
     randomnum = random.randint(0, len(sql) - 1)
     random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
+    # last_choice.append([random_ip, randomnum])
     return random_ip
 
 
@@ -30,6 +32,7 @@ def check_node():
     获取随机节点
     :return: 返回协议://ip:端口 没有返回-1
     """
+    global last_choice
     sql = select_Location("中国")
     if sql == -1:
         time.sleep(random.uniform(0.8, 2.8))
@@ -40,8 +43,14 @@ def check_node():
             # 判断数组长度是否大于3
             if len(sql) > 3:
                 # 第一次使用随机IP，诺随机IP不可用，按顺序获取IP
-                randomnum = random.randint(0, len(sql) - 1)
-                random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
+                while True:
+                    randomnum = random.randint(0, len(sql) - 1)
+                    random_ip = sql[randomnum][3] + "://" + sql[randomnum][0]
+                    if [random_ip, randomnum] == last_choice:
+                        continue
+                    else:
+                        break
+                last_choice = [random_ip, randomnum]
                 return random_ip
         # 走到这里说明不复合上面的条件
         return read_node()

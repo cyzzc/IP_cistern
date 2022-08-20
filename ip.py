@@ -27,7 +27,6 @@ from com.pysqlit.py3 import select_data
 
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
-lock = threading.Lock()
 all_task_list = []
 getting_ip_flag = False
 
@@ -103,10 +102,8 @@ def check_add_ip_thread():
         sql = select_data(surface='filter')
         if type(sql) == list:
             if len(sql) >= 5:
-                lock.acquire()
                 check_ip()
                 count = 1
-                lock.release()
         else:
             if count < 15:
                 count = +2
@@ -122,9 +119,7 @@ def check_exist_ip_thread():
         sql = select_data(surface='acting')
         if type(sql) == list:
             if len(sql) >= 0:
-                lock.acquire()
                 check_ip("acting")
-                lock.release()
 
 
 @scheduler.task('interval', id='conn_random', days=1)

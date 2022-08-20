@@ -7,6 +7,7 @@ from com.other.log import log_ip
 
 db_path = read_yaml()["db"]
 
+
 def create_db():
     """
     创建数据库
@@ -53,19 +54,20 @@ def insert_data(ip_port, ip, port, protocol, country, surface='acting'):
     :param surface: 数据库表名，默认acting
     :return:
     """
+    # 创建数据库
+    cursor, db = create_db()
     try:
-        # 创建数据库
-        cursor, db = create_db()
         # 插入数据 ip, port,  protocol, country
         cursor.execute(
             f"insert into {surface} values('%s','%s','%d','%s','%s')" % (ip_port, ip, port, protocol, country))
         # cursor.execute("insert into ip values('%s',)" %)
         db.commit()
-        # 关闭数据库
-        db.close()
         return 0
     except Exception as e:
         return -1
+    finally:
+        # 关闭数据库
+        db.close()
 
 
 # 查询数据方法
@@ -75,9 +77,9 @@ def select_data(surface='acting'):
     :param surface: 数据库表名，默认acting
     :return: http或https的代理
     """
+    # 创建数据库
+    cursor, db = create_db()
     try:
-        # 创建数据库
-        cursor, db = create_db()
         # 查询数据
         cursor.execute(f"select * from {surface}")
         # 获取数据
@@ -88,6 +90,9 @@ def select_data(surface='acting'):
     except Exception as e:
         log_ip("查询数据失败" + str(e))
         return -1
+    finally:
+        # 关闭数据库
+        db.close()
 
 
 def select_Location(country=None, surface='acting'):
@@ -97,9 +102,9 @@ def select_Location(country=None, surface='acting'):
     :param surface: 数据库表名，默认acting
     :return: http或https的代理
     """
+    # 创建数据库
+    cursor, db = create_db()
     try:
-        # 创建数据库
-        cursor, db = create_db()
         # 查询数据
         if country is None:
             cursor.execute(f"select * from {surface}")
@@ -114,6 +119,9 @@ def select_Location(country=None, surface='acting'):
     except Exception as e:
         log_ip("查询数据失败" + str(e))
         return -1
+    finally:
+        # 关闭数据库
+        db.close()
 
 
 # 删除所有数据方法
@@ -123,9 +131,9 @@ def delete_data(surface='acting'):
     :param surface: 数据库表名，默认acting
     :return:
     """
+    # 创建数据库
+    cursor, db = create_db()
     try:
-        # 创建数据库
-        cursor, db = create_db()
         # 删除数据
         cursor.execute(f'delete from {surface}')
         db.commit()
@@ -134,6 +142,9 @@ def delete_data(surface='acting'):
         return 0
     except Exception as e:
         return -1
+    finally:
+        # 关闭数据库
+        db.close()
 
 
 # 删除某一条数据方法
@@ -144,9 +155,9 @@ def delete_one_data(ip_port, surface='acting'):
     :param surface: 数据库表名，默认acting
     :return: 正常返回0，不正常返回1
     """
+    # 创建数据库
+    cursor, db = create_db()
     try:
-        # 创建数据库
-        cursor, db = create_db()
         # 删除数据
         cursor.execute(f"delete from {surface} where ip_port='{ip_port}'")
         db.commit()
@@ -155,3 +166,6 @@ def delete_one_data(ip_port, surface='acting'):
         return 0
     except Exception as e:
         return -1
+    finally:
+        # 关闭数据库
+        db.close()
