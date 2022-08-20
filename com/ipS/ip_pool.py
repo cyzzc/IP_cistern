@@ -3,8 +3,8 @@ import json
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 
 def get_uu_proxy():
@@ -15,7 +15,7 @@ def get_uu_proxy():
     # 获取网站数据
     url = 'https://uu-proxy.com/api/free'
     try:
-
+        sql = IPsql()
         strhtml = requests.get(url, headers=get_user_agent(), verify=False, timeout=20)
         data = json.loads(strhtml.text)
         for i in range(len(data['free']['proxies'])):
@@ -26,9 +26,9 @@ def get_uu_proxy():
             country = "CN"
             if protocol == "http" or protocol == "https":
                 # 添加的数据库
-                insert_data(ip + ':' + str(port), ip, port, protocol, country, 'filter')
+                sql.insert_data([ip + ':' + str(port), ip, str(port), protocol, country], 'filter')
         # 关闭爬取网站
         strhtml.close()
-
     except Exception as e:
-        log_ip("异常提示,com-->ipS-->ip_pool.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常提示,com-->ipS-->ip_pool.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

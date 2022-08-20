@@ -4,7 +4,7 @@ import re
 import requests
 
 from com.other.conn import revise_yaml, read_yaml
-from com.other.log import log_ip
+from com.other.log import login
 
 
 def country_ip(proxies=None):
@@ -43,7 +43,7 @@ def country_revise():
     """
     read = read_yaml()
     coun = country_ip()
-    log_ip("你服务器所在国家是 " + f'<b style="color: aqua; font-weight: bolder">{coun}</b>')
+    login("你服务器所在国家是 " + f'<b style="color: aqua; font-weight: bolder">{coun}</b>')
     if coun != "中国" and coun != -1:
         revise_yaml("country: 国外", read['Label']['country'])
     else:
@@ -59,4 +59,4 @@ def aglevel():
     # 获取1-4之间的随机数
     ra = random.randint(1, 4)
     revise_yaml(f"country: {ra}", read['Label']['AGlevel'])
-    log_ip(f"AGlevel更新为{ra}")
+    login(f"AGlevel更新为{ra}")

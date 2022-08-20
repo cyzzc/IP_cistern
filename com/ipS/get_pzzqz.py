@@ -1,15 +1,17 @@
-
 import re
 
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
+
+
 
 
 def get_pzz():
     try:
+        sql = IPsql()
         reps = requests.get("https://pzzqz.com/", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
@@ -29,9 +31,11 @@ def get_pzz():
         for i in range(len(http_ip)):
             # 创建字典，里面存放所有网络协议,原因https 不能使用,但是转换成http协议可以使用
             if http_type[i] == "https" or http_type[i] == "http" or http_type[i] == "Https" or http_type[i] == "Http":
-                http_ip_type = {"http": "http", "Http": "http", "https": "http", "Https": "http", "socks": "socks", "Socks": "socks", "Socks4": "socks4", "socks4": "socks4",
+                http_ip_type = {"http": "http", "Http": "http", "https": "http", "Https": "http", "socks": "socks",
+                                "Socks": "socks", "Socks4": "socks4", "socks4": "socks4",
                                 "socks5": "socks5", "Socks5": "socks5"}
-                insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                                 http_country[i], 'filter')
+                sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                                 http_country[i]], 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_pzzqz.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->get_pzzqz.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

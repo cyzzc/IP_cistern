@@ -1,10 +1,12 @@
 import re
+import time
 
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
+
 
 
 def get_66ip():
@@ -13,6 +15,8 @@ def get_66ip():
     :return:
     """
     try:
+        sql = IPsql()
+        time.sleep(3)
         reps = requests.get("http://www.66ip.cn/", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
         reps.encoding = "utf-8"
@@ -28,7 +32,7 @@ def get_66ip():
         # print(len(http_ip))
         # print(len(http_port))
         for i in range(len(http_ip)):
-            insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), "http",
-                        "CN", 'filter')
+            sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_66ip.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->get_66ip.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

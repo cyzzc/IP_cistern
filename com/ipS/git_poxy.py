@@ -3,13 +3,15 @@ import re
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 
 def get_git_ip():
     try:
-        reps = requests.get("https://hub.0z.gs/fate0/proxylist/blob/master/proxy.list", headers=get_user_agent(), verify=False, timeout=20)
+        sql = IPsql()
+        reps = requests.get("https://hub.0z.gs/fate0/proxylist/blob/master/proxy.list", headers=get_user_agent(),
+                            verify=False, timeout=20)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
@@ -30,7 +32,9 @@ def get_git_ip():
             if http_type[i] == "https" or http_type[i] == "http":
                 http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                 "socks5": "socks5"}
-                insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                            http_country[i], 'filter')
+                sql.insert_data(
+                    [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                     http_country[i]], 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->git_poxy.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->git_poxy.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

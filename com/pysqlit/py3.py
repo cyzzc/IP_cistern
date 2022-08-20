@@ -1,157 +1,98 @@
+# -*- coding:utf8 -*-
 import sqlite3
 
 from com.other.conn import read_yaml
 
-# 创建数据库方法
-from com.other.log import log_ip
-
 db_path = read_yaml()["db"]
 
-def create_db():
-    """
-    创建数据库
-    :return:
-    """
-    try:
-        # 创建数据库
-        db = sqlite3.connect(db_path)
-        # 创建游标
-        cursor = db.cursor()
-        return cursor, db
-    except Exception as e:
-        print("创建数据库失败" + str(e))
-        return -1
 
+class IPsql:
 
-# 创建表方法
-def create_table():
-    """
-    创建表
-    :return:
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 创建表 ip= 服务器ip port=端口 protocol=协议 country=国家，ip不能为空和唯一
-        cursor.execute(
-            "create table acting(ip_port varchar(20) primary key,ip varchar(15) not null,port int(6) not null,  protocol varchar(6), country varchar(10))")
-        # 关闭数据库
-        db.close()
-        return 0
-    except Exception as e:
-        return -1
+    def __init__(self):
+        self.conn = sqlite3.connect(db_path, timeout=10)
+        self.cursor = self.conn.cursor()
 
+    def create_table(self) -> int:
+        """
+        创建表
+        :return: 成0反-1
+        """
+        try:
+            # 创建表 ip= 服务器ip port=端口 protocol=协议 country=国家，ip不能为空和唯一
+            sql = "create table acting(ip_port varchar(20) primary key,ip varchar(15) not null,port int(6) not null,  " \
+                  "protocol varchar(6), country varchar(10)) "
+            self.cursor.execute(sql)
+            self.conn.commit()
+            return 0
+        except Exception as e:
+            return -1
 
-def insert_data(ip_port, ip, port, protocol, country, surface='acting'):
-    """
-    插入数据
-    :param ip_port: ip:port
-    :param ip: ip地址
-    :param port: 端口
-    :param protocol: 协议
-    :param country: 地区
-    :param surface: 数据库表名，默认acting
-    :return:
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 插入数据 ip, port,  protocol, country
-        cursor.execute(
-            f"insert into {surface} values('%s','%s','%d','%s','%s')" % (ip_port, ip, port, protocol, country))
-        # cursor.execute("insert into ip values('%s',)" %)
-        db.commit()
-        # 关闭数据库
-        db.close()
-        return 0
-    except Exception as e:
-        return -1
+    def insert_data(self, data: list, table_name='acting') -> int:
+        """
+        插入数据，根据传入的数据类型进行判断，自动选者插入方式
+        :param data: 要插入的数据 [ip:port,ip地址,端口,协议,地区],其中协议和地区可以不带
+        :param table_name: 表名,默认acting
+        :return: 0 or -1
+        """
+        global sql
+        try:
+            if isinstance(data, list):
+                # 获取data长度
+                long = len(data)
+                lis = ['http', 'No']
+                # 表示插入值完整不用补充
+                if long > 4:
+                    sql = f"INSERT INTO {table_name} VALUES ('{data[0]}','{data[1]}',{data[2]},'{data[3]}','{data[4]}')"
+                elif long == 4:
+                    sql = f"INSERT INTO {table_name} VALUES ('{data[0]}','{data[1]}',{data[2]},'{data[3]}', '{lis[1]}')"
+                elif long == 3:
+                    sql = f"INSERT INTO {table_name} VALUES ('{data[0]}','{data[1]}',{data[2]}, '{lis[0]}', '{lis[1]}')"
+                self.cursor.execute(sql)
+            return 0
+        except Exception as e:
+            return -1
+        finally:
+            self.conn.commit()
 
+    def select_data(self, country="Null", surface='acting') -> list:
+        """
+        查询数据所有
+        :param country: 国家, 默认所有
+        :param surface: 数据库表名，默认acting
+        :return: http或https的代理,反之-1
+        """
+        try:
+            if country != "Null":
+                self.cursor.execute(f"select * from {surface} where country='{country}'")
+            else:
+                self.cursor.execute(f"select * from {surface}")
+            # 获取查询数据
+            results = self.cursor.fetchall()
+            return results
+        except Exception as e:
+            return []
 
-# 查询数据方法
-def select_data(surface='acting'):
-    """
-    查询数据所有
-    :param surface: 数据库表名，默认acting
-    :return: http或https的代理
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 查询数据
-        cursor.execute(f"select * from {surface}")
-        # 获取数据
-        data = cursor.fetchall()
-        # 关闭数据库
-        db.close()
-        return data
-    except Exception as e:
-        log_ip("查询数据失败" + str(e))
-        return -1
+    def delete_data(self, ip_port, surface='acting') -> int:
+        """
+        根据条件删除数据
+        :param ip_port: ip:port
+        :param surface: 数据库表名，默认acting
+        :return: 正常返回0，不正常返回1
+        """
+        try:
+            self.conn.execute(f"delete from {surface} where ip_port='{ip_port}'")
+            self.conn.commit()
+            return 0
+        except Exception as e:
+            return -1
 
-
-def select_Location(country=None, surface='acting'):
-    """
-    查询数据所有
-    :param country: 国家
-    :param surface: 数据库表名，默认acting
-    :return: http或https的代理
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 查询数据
-        if country is None:
-            cursor.execute(f"select * from {surface}")
-        else:
-            # 查询某个国家的数据
-            cursor.execute(f"select * from {surface} where country='{country}'")
-        # 获取数据
-        data = cursor.fetchall()
-        # 关闭数据库
-        db.close()
-        return data
-    except Exception as e:
-        log_ip("查询数据失败" + str(e))
-        return -1
-
-
-# 删除所有数据方法
-def delete_data(surface='acting'):
-    """
-    删除数据
-    :param surface: 数据库表名，默认acting
-    :return:
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 删除数据
-        cursor.execute(f'delete from {surface}')
-        db.commit()
-        # 关闭数据库
-        db.close()
-        return 0
-    except Exception as e:
-        return -1
-
-
-# 删除某一条数据方法
-def delete_one_data(ip_port, surface='acting'):
-    """
-    删除数据
-    :param ip_port: ip:port
-    :param surface: 数据库表名，默认acting
-    :return: 正常返回0，不正常返回1
-    """
-    try:
-        # 创建数据库
-        cursor, db = create_db()
-        # 删除数据
-        cursor.execute(f"delete from {surface} where ip_port='{ip_port}'")
-        db.commit()
-        # 关闭数据库
-        db.close()
-        return 0
-    except Exception as e:
-        return -1
+    def close(self):
+        """
+        关闭数据库
+        :return:
+        """
+        try:
+            self.cursor.close()
+            self.conn.close()
+        except Exception as ex:
+            raise Exception("关闭数据库连接失败")

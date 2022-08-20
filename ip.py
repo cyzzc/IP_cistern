@@ -5,7 +5,9 @@ from flask_apscheduler import APScheduler
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
 from com.Web.index import run_web
+from com.ipS.get_66ip import get_66ip
 from com.ipS.get_crape import get_crape
+from com.ipS.get_github import get_github
 from com.ipS.get_ip3366 import get_ip3366
 from com.ipS.get_jiangxianli import get_jxl
 from com.ipS.get_kxdaili import get_kuai
@@ -20,12 +22,11 @@ from com.detect.http_re import check_ip
 from com.ipS.ip_pool import get_uu_proxy
 from com.other.conn import read_yaml
 from com.other.country import country_revise, aglevel
-from com.other.log import log_ip
-from com.pysqlit.py3 import select_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
-lock = threading.Lock()
 all_task_list = []
 getting_ip_flag = False
 
@@ -52,6 +53,8 @@ def get_ip():
         "get_v1": get_v1,
         "get_jxl": get_jxl,
         "get_proxydb": get_proxydb,
+        "get_66ip": get_66ip,  # 小心被拉黑
+        "get_github": get_github,
         "get_proxynova": get_proxynova,  # 不能使用去方法里面查看异常信息
         "get_crape": get_crape  # 适配非国内环境的代理
     }
@@ -69,7 +72,7 @@ def get_ip():
     # 下面是适配非国内环境的代理
     if area['country'] != '国内':
         all_task_list.append(pool.submit(ip_db.get("get_crape")))
-    log_ip("开始爬取ip")
+    login("开始爬取ip")
     getting_ip_flag = True
     t3 = threading.Thread(target=check_all_task_list_thread)
     t3.start()
@@ -84,7 +87,7 @@ def check_all_task_list_thread():
     """
     global all_task_list, getting_ip_flag
     wait(all_task_list, return_when=ALL_COMPLETED)
-    log_ip("爬取ip完毕")
+    login("爬取ip完毕")
     getting_ip_flag = False
 
 
@@ -92,17 +95,16 @@ def check_add_ip_thread():
     """
     监听添加线程
     """
-    log_ip("监听筛选池线程启动成功")
+    sql1 = IPsql()
+    login("监听筛选池线程启动成功")
     count = 1
     while True:
         time.sleep(count)
-        sql = select_data(surface='filter')
+        sql = sql1.select_data(country='Null', surface='filter')
         if type(sql) == list:
             if len(sql) >= 5:
-                lock.acquire()
                 check_ip()
                 count = 1
-                lock.release()
         else:
             if count < 15:
                 count = +2
@@ -112,15 +114,14 @@ def check_exist_ip_thread():
     """
     监听ip存活线程
     """
-    log_ip("监听ip池存活线程启动成功")
+    sql = IPsql()
+    login("监听ip池存活线程启动成功")
     while True:
         time.sleep(35)  # 太快容易被拉黑
-        sql = select_data(surface='acting')
-        if type(sql) == list:
-            if len(sql) >= 0:
-                lock.acquire()
+        sql1 = sql.select_data()
+        if type(sql1) == list:
+            if len(sql1) >= 0:
                 check_ip("acting")
-                lock.release()
 
 
 @scheduler.task('interval', id='conn_random', days=1)
@@ -141,7 +142,7 @@ def implement():
     try:
         get_ip()
     except Exception as e:
-        log_ip("定时任务报错" + str(e))
+        login("定时任务报错" + str(e))
 
 
 @scheduler.task('interval', id='timing_ck', minutes=2)
@@ -150,26 +151,26 @@ def timing_ck():
     定时任务 每⑤分钟检测一次
     :return:
     """
+    sql1 = IPsql()
     # 用来获取数据长度
-    sql = select_data()
+    sql = sql1.select_data()
     # 检测返回的类型
-    if type(sql) == list:
+    if type(sql) == list and len(sql) > 0:
         # 如果数据长度不大于6条，就重新爬取
         if len(sql) <= 5:
             get_ip()
         else:
-            log_ip(
+            login(
                 f'ip数据还有<b style="color: rgb(255, 0, 255); font-weight: bolder">{len(sql)}条</b>, 不需要重新爬取')
     else:
-        log_ip("数据库中没有数据，重新爬取")
+        login("数据库中没有数据，重新爬取")
         get_ip()
 
 
 if __name__ == '__main__':
-    log_ip('<h1 style="color: rgb(111, 255, 0);">===程序开始运行===</h1>')
+    login('<h1 style="color: rgb(111, 255, 0);">===程序开始运行===</h1>')
     # 判断是否是国外环境以此来决定是否爬取国外代理池
     country_revise()
-    #  timed_thread可能存在未知BUG，如果不取消代理请删除
     timing_ck()
     scheduler.start()
     t1 = threading.Thread(target=check_add_ip_thread)

@@ -1,6 +1,6 @@
 from com.detect.proxynova_scraper import get_proxies, get_proxies_by_country
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 
 def get_proxynova(area="CN"):
@@ -10,6 +10,7 @@ def get_proxynova(area="CN"):
     :return:
     """
     try:
+        sql = IPsql()
         if area == ' ':
             proxies = get_proxies()
         else:
@@ -17,10 +18,11 @@ def get_proxynova(area="CN"):
         if len(proxies) <= 3:
             return get_proxynova(' ')
         for i in range(len(proxies)):
-            insert_data(proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
-                        proxies[i].get('proxyIp'),
-                        int(proxies[i].get('proxyPort')), "http",
-                        proxies[1].get('proxyCountry'), 'filter')
+            sql.insert_data([proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
+                             proxies[i].get('proxyIp'),
+                             proxies[i].get('proxyPort'), "http",
+                             proxies[1].get('proxyCountry')], 'filter')
 
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_proxynova.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->get_proxynova.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

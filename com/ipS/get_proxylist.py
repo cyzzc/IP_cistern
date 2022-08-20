@@ -5,13 +5,15 @@ import re
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 
 def get_fate():
     try:
-        reps = requests.get("http://proxylist.fatezero.org/proxy.list", headers=get_user_agent(), timeout=20, verify=False)
+        sql = IPsql()
+        reps = requests.get("http://proxylist.fatezero.org/proxy.list", headers=get_user_agent(), timeout=20,
+                            verify=False)
         # 设置编码
         reps.encoding = "utf-8"
         re1 = reps.text
@@ -32,7 +34,9 @@ def get_fate():
             if http_type[i] == "https" or http_type[i] == "http":
                 http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                 "socks5": "socks5"}
-                insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                            http_country[i], 'filter')
+                sql.insert_data(
+                    [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                     http_country[i]], 'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')

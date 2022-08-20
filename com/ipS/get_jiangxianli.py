@@ -3,8 +3,8 @@ import re
 import requests
 
 from com.other.heade import get_user_agent
-from com.other.log import log_ip
-from com.pysqlit.py3 import insert_data
+from com.other.log import login
+from com.pysqlit.py3 import IPsql
 
 
 def get_jxl():
@@ -12,6 +12,7 @@ def get_jxl():
     取消了地理位置，全部定义为国内CN
     :return:
     """
+    sql = IPsql()
     try:
         reps = requests.get("https://ip.jiangxianli.com/?page=1", headers=get_user_agent(), timeout=20, verify=False)
         # 设置编码
@@ -36,7 +37,8 @@ def get_jxl():
             if http_type[i] == "https" or http_type[i] == "http":
                 http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                 "socks5": "socks5"}
-                insert_data(http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type[http_type[i]],
-                            'CN', 'filter')
+                sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]]],
+                                'filter')
     except Exception as e:
-        log_ip("异常问题，com-->ipS-->get_jiangxianli.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+        login(
+            "异常问题，com-->ipS-->get_jiangxianli.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
