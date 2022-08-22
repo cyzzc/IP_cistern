@@ -36,7 +36,7 @@ def check_node():
     sqlAll = IPsql()
     global last_choice
     sql = sqlAll.select_data(country="中国")
-    if sql == -1:
+    if not sql:
         time.sleep(random.uniform(0.8, 2.8))
         sqlAll.select_data(country="中国")
     try:

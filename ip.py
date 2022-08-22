@@ -28,7 +28,7 @@ class RunMain(GetIp, HttpRe):
         """
         global all_task_list, getting_ip_flag
         if getting_ip_flag:
-            self.log_write("任务池已有任务，阻断此次提交！")
+            self.log_write("爬取IP任务池中已有任务，阻断此次任务提交！")
             return
         area = read_yaml()
         all_task_list = []

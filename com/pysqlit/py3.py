@@ -1,5 +1,7 @@
 # -*- coding:utf8 -*-
+import random
 import sqlite3
+import time
 
 from com.pysqlit.sqlite_queue import SqliteQueue
 
@@ -70,7 +72,8 @@ class IPsql:
         """
 
         try:
-            conn = sqlite3.connect(db_path, timeout=10)
+            time.sleep(random.uniform(0.8, 4.8))
+            conn = sqlite3.connect(db_path, timeout=5)
             cursor = conn.cursor()
             # _results = []
             if country != "Null":

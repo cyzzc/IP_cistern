@@ -6,7 +6,7 @@ log: ./ip.log
 db: ./com/pysqlit/ip.sqlite
 # 地理位置
 country: 国内
-#可用等级,1-4,等级越高可用性越强
+#可用等级,1-5,等级越高可用性越强
 AGlevel: 3
 # 用于记录行
 Label:
