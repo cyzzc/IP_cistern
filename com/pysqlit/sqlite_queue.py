@@ -44,7 +44,7 @@ class SqliteQueue(threading.Thread):
         self._cursor = None
 
     def run(self):
-        self._conn = sqlite3.connect(self._db)  # 链接sqlite库
+        self._conn = sqlite3.connect(self._db, check_same_thread = False)  # 链接sqlite库
         self._cursor = self._conn.cursor()  # 获取cursor
         while True:
             if self._queue.empty():  # 如果队列空则sleep线程一段时间，以等待新操作
