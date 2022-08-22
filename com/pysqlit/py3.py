@@ -16,7 +16,7 @@ class IPsql:
     """
 
     def __init__(self):
-        self.queue_sql = SqliteQueue(db_path, wait=5)
+        self.queue_sql = SqliteQueue(db_path, wait=15)
         self.queue_sql.setDaemon(False)  # 默认为守护线程
         self.queue_sql.start()
         pass
@@ -72,8 +72,8 @@ class IPsql:
         """
 
         try:
-            time.sleep(random.uniform(0.8, 4.8))
-            conn = sqlite3.connect(db_path, timeout=5)
+            time.sleep(random.uniform(0.8, 1.8))
+            conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
             # _results = []
             if country != "Null":

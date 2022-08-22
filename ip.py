@@ -77,7 +77,8 @@ class RunMain(GetIp, HttpRe):
         """
         global all_task_list, getting_ip_flag
         wait(all_task_list, return_when=ALL_COMPLETED)
-        self.log_write("爬取ip完毕")
+        self.log_write("爬取ip完毕，休息10min")
+        time.sleep(600)
         getting_ip_flag = False
 
     def check_add_ip_thread(self):

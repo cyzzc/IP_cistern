@@ -11,7 +11,7 @@ class HttpRe(BaseData):
     def __init__(self):
         super().__init__()
         self.AGlevel = read_yaml()["AGlevel"]
-        self.pool = ThreadPoolExecutor(max_workers=200, thread_name_prefix="check_ip_")
+        self.pool = ThreadPoolExecutor(max_workers=300, thread_name_prefix="check_ip_")
         self.all_task_list = []
         self.getting_ip_flag = False
         self.del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
@@ -75,6 +75,7 @@ class HttpRe(BaseData):
         """
         if not self.getting_ip_flag:
             sq = self.sql.select_data("Null", sql_name)
+            # print(sq)
             for i in sq:
                 # t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
                 self.all_task_list.append(self.pool.submit(self.http_request, i[3] + "://" + i[0], i[0], i, sql_name))
