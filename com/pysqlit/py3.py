@@ -83,8 +83,8 @@ class IPsql:
         except Exception as e:
             return []
         finally:
-            conn.close()
             cursor.close()
+            conn.close()
 
     def delete_data(self, ip_port, surface='acting') -> int:
         """
