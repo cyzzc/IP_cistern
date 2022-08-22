@@ -69,10 +69,9 @@ class IPsql:
         :return: http或https的代理,反之-1
         """
 
-        conn = sqlite3.connect(db_path, timeout=10)
-        cursor = conn.cursor()
-
         try:
+            conn = sqlite3.connect(db_path, timeout=10)
+            cursor = conn.cursor()
             # _results = []
             if country != "Null":
                 cursor.execute(f"select * from {surface} where country='{country}'")
@@ -84,8 +83,8 @@ class IPsql:
         except Exception as e:
             return []
         finally:
-            cursor.close()
             conn.close()
+            cursor.close()
 
     def delete_data(self, ip_port, surface='acting') -> int:
         """
