@@ -33,7 +33,7 @@ class HttpRe(BaseData):
             check_wb = [
                 "https://plogin.m.jd.com/",
                 "https://api.m.jd.com/",
-                "https://m.jingxi.com/",
+                "https://st.jingxi.com/",
                 "https://bean.m.jd.com",
                 "http://isvjcloud.com",  # 基本只能是国内代理
             ]
