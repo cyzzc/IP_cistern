@@ -11,7 +11,7 @@ class HttpRe(BaseData):
     def __init__(self):
         super().__init__()
         self.AGlevel = read_yaml()["AGlevel"]
-        self.pool = ThreadPoolExecutor(max_workers=300, thread_name_prefix="check_ip_")
+        self.pool = ThreadPoolExecutor(max_workers=100, thread_name_prefix="check_ip_")
         self.all_task_list = []
         self.getting_ip_flag = False
         self.del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
@@ -33,6 +33,7 @@ class HttpRe(BaseData):
             check_wb = [
                 "https://plogin.m.jd.com/",
                 "https://api.m.jd.com/",
+                "https://www.jsjiami.com/",
                 "https://st.jingxi.com/",
                 "https://bean.m.jd.com",
                 "http://isvjcloud.com",  # 基本只能是国内代理
@@ -41,11 +42,13 @@ class HttpRe(BaseData):
             # 请求超过3秒，就认为节点不可用
             # print(AGlevel)
             for i in range(0, self.AGlevel):
-                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, allow_redirects=False,
-                                 timeout=20, verify=False)
+                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, timeout=10)
                 if r.status_code != 200:
                     raise ConnectionError
-            if sql_name == 'filter':
+            second = self.ping(data[1], unit='ms', timeout=10)
+            if second >= 1000.0:
+                self.del_filter_data(data[0])
+            elif sql_name == 'filter':
                 location = country_ip(proxies)
                 # 检测成功添加到可用代理的数据库中
                 if location != -1:
@@ -72,7 +75,6 @@ class HttpRe(BaseData):
                 # self.sql.delete_data(ip_port, sql_name)
                 # print(e)
                 self.del_filter_data(data[0])
-                pass
 
     def check_ip(self, sql_name='filter'):
         """
