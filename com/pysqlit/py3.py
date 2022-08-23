@@ -73,7 +73,7 @@ class IPsql:
 
         try:
             time.sleep(random.uniform(0.8, 1.8))
-            conn = sqlite3.connect(db_path, check_same_thread = False)
+            conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
             # _results = []
             if country != "Null":

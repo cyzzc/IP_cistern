@@ -34,7 +34,9 @@ class GetIp(BaseData):
             # print(len(http_ip))
             # print(len(http_port))
             for i in range(len(http_ip)):
-                self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                     [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], "http"])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_66ip.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -54,7 +56,8 @@ class GetIp(BaseData):
             http_ip = re_ip.findall(re1)
             http_port = re_port.findall(re1)
             for i in range(len(http_ip)):
-                self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                self.add_filter_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], "http"])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_crape.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -103,11 +106,14 @@ class GetIp(BaseData):
                     # print(len(http_ip))
                     # print(len(http_port))
                     for i in range(len(http_ip)):
-                        http_ip_type = "https" if url.split('/')[-1] == "https.txt" else "http"
+                        # http_ip_type = "https" if url.split('/')[-1] == "https.txt" else "http"
                         # 创建字典，里面存放所有网络协议,原因https 不能使用,但是转换成http协议可以使用
-                        self.sql.insert_data(
-                            [http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type,
-                             "Github"], 'filter')
+                        # self.sql.insert_data(
+                        #     [http_ip[i] + ':' + http_port[i], http_ip[i], int(http_port[i]), http_ip_type,
+                        #      "Github"], 'filter')
+                        self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                             [http_ip[i] + ':' + http_port[i], http_ip[i],
+                                              int(http_port[i]), _type, "Github"])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_github.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -130,7 +136,10 @@ class GetIp(BaseData):
                     http_ip = re_ip.findall(re1)
                     http_port = re_port.findall(re1)
                     for i in range(len(http_ip)):
-                        self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                        # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
+                        self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                             [http_ip[i] + ':' + http_port[i], http_ip[i],
+                                              http_port[i], "http"])
                 except Exception as e:
                     return 0
         except Exception as e:
@@ -167,9 +176,12 @@ class GetIp(BaseData):
                 if http_type[i] == "https" or http_type[i] == "http":
                     http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                     "socks5": "socks5"}
-                    self.sql.insert_data(
-                        [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]]],
-                        'filter')
+                    # self.sql.insert_data(
+                    #     [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]]],
+                    #     'filter')
+                    self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                         [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i],
+                                          http_ip_type[http_type[i]]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_jiangxianli.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -192,7 +204,11 @@ class GetIp(BaseData):
                         http_ip = re_ip.findall(re1)
                         http_port = re_port.findall(re1)
                         for v in range(len(http_ip)):
-                            self.sql.insert_data([http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v]], 'filter')
+                            # self.sql.insert_data([http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v]],
+                            # 'filter')
+                            self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                                 [http_ip[v] + ':' + http_port[v], http_ip[v],
+                                                  http_port[v], "http"])
                     except Exception as e:
                         return 0
         except Exception as e:
@@ -244,8 +260,11 @@ class GetIp(BaseData):
                     # 把字母转换为小写
                     http_type[i] = http_type[i].lower()
                     if http_type[i] == "http" or http_type[i] == "https":
-                        self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_type[i]],
-                                             'filter')
+                        # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_type[
+                        # i]], 'filter')
+                        self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                             [http_ip[i] + ':' + http_port[i], http_ip[i],
+                                              http_port[i], http_type[i]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_proxydb.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -274,9 +293,13 @@ class GetIp(BaseData):
                 if http_type[i] == "https" or http_type[i] == "http":
                     http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                     "socks5": "socks5"}
-                    self.sql.insert_data(
-                        [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
-                         http_country[i]], 'filter')
+                    # self.sql.insert_data(
+                    #     [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                    #      http_country[i]], 'filter')
+                    self.add_filter_data(http_ip[i] + ':' + http_port[i],
+                                         [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i],
+                                          http_ip_type[http_type[i]],
+                                          http_country[i]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -295,10 +318,15 @@ class GetIp(BaseData):
             if len(proxies) <= 3:
                 return self.get_proxynova(' ')
             for i in range(len(proxies)):
-                self.sql.insert_data([proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
+                # self.sql.insert_data([proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
+                #                       proxies[i].get('proxyIp'),
+                #                       proxies[i].get('proxyPort'), "http",
+                #                       proxies[1].get('proxyCountry')], 'filter')
+                self.add_filter_data(proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
+                                     [proxies[i].get('proxyIp') + ':' + proxies[i].get('proxyPort'),
                                       proxies[i].get('proxyIp'),
                                       proxies[i].get('proxyPort'), "http",
-                                      proxies[1].get('proxyCountry')], 'filter')
+                                      proxies[1].get('proxyCountry')])
 
         except Exception as e:
             self.log_write(
@@ -330,9 +358,13 @@ class GetIp(BaseData):
                     http_ip_type = {"http": "http", "Http": "http", "https": "http", "Https": "http", "socks": "socks",
                                     "Socks": "socks", "Socks4": "socks4", "socks4": "socks4",
                                     "socks5": "socks5", "Socks5": "socks5"}
-                    self.sql.insert_data(
+                    # self.sql.insert_data(
+                    #     [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                    #      http_country[i]], 'filter')
+                    self.add_filter_data(
+                        http_ip[i] + ':' + http_port[i],
                         [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
-                         http_country[i]], 'filter')
+                         http_country[i]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_pzzqz.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -363,8 +395,12 @@ class GetIp(BaseData):
                 # 不管什么类型都写入http协议
                 # http_ip_type = {"http": "http", "Http": "http", "HTTP": "http", "https": "http", "Https": "http", "HTTPS": "http", "socks": "socks", "Socks": "socks", "SOCKS": "socks", "Socks4": "socks4", "socks4": "socks4",
                 #                 "SOCKS4": "socks4", "socks5": "socks5", "Socks5": "socks5", "SOCKS5": "socks5"}
-                self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], 'http',
-                                 http_country[i]], 'filter')
+                # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], 'http',
+                #                       http_country[i]], 'filter')
+                self.add_filter_data(
+                    http_ip[i] + ':' + http_port[i],
+                    [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], 'http',
+                     http_country[i]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_scan.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -384,7 +420,10 @@ class GetIp(BaseData):
             http_ip = re_ip.findall(re1)
             http_port = re_port.findall(re1)
             for v in range(len(http_ip)):
-                self.sql.insert_data([http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v]], 'filter')
+                # self.sql.insert_data([http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v]], 'filter')
+                self.add_filter_data(
+                    http_ip[v] + ':' + http_port[v],
+                    [http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v], "http"])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_v1.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -413,9 +452,13 @@ class GetIp(BaseData):
                 if http_type[i] == "https" or http_type[i] == "http":
                     http_ip_type = {"http": "http", "https": "http", "socks": "socks", "socks4": "socks4",
                                     "socks5": "socks5"}
-                    self.sql.insert_data(
+                    # self.sql.insert_data(
+                    #     [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
+                    #      http_country[i]], 'filter')
+                    self.add_filter_data(
+                        http_ip[i] + ':' + http_port[i],
                         [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], http_ip_type[http_type[i]],
-                         http_country[i]], 'filter')
+                         http_country[i]])
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->git_poxy.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
@@ -438,7 +481,10 @@ class GetIp(BaseData):
                 country = "CN"
                 if protocol == "http" or protocol == "https":
                     # 添加的数据库
-                    self.sql.insert_data([ip + ':' + str(port), ip, str(port), protocol, country], 'filter')
+                    # self.sql.insert_data([ip + ':' + str(port), ip, str(port), protocol, country], 'filter')
+                    self.add_filter_data(
+                        ip + ':' + str(port),
+                        [ip + ':' + str(port), ip, str(port), protocol, country])
             # 关闭爬取网站
             strhtml.close()
         except Exception as e:

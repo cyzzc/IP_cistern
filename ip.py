@@ -11,7 +11,7 @@ from com.other.conn import read_yaml
 from com.other.country import country_revise, aglevel
 
 scheduler = APScheduler()
-pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
+pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="get_ip_")
 all_task_list = []
 getting_ip_flag = False
 
@@ -32,6 +32,7 @@ class RunMain(GetIp, HttpRe):
             return
         area = read_yaml()
         all_task_list = []
+        self.clear_filter_data()  # 清空数据
         # 获取代理
         ip_db = {
             "get_ip": self.get_uu_proxy,
@@ -63,7 +64,7 @@ class RunMain(GetIp, HttpRe):
         # 下面是适配非国内环境的代理
         if area['country'] != '国内':
             all_task_list.append(pool.submit(ip_db.get("get_crape")))
-        self.log_write("开始爬取ip")
+        self.log_write("任务已全部提交，开始爬取ip")
         getting_ip_flag = True
         t3 = threading.Thread(target=self.check_all_task_list_thread)
         t3.start()
@@ -89,7 +90,8 @@ class RunMain(GetIp, HttpRe):
         count = 1
         while True:
             time.sleep(count)
-            sql = self.sql.select_data(country="Null", surface='filter')
+            # sql = self.sql.select_data(country="Null", surface='filter')
+            sql = list(self.filter_data.values()) if self.filter_data else " "
             if type(sql) == list and len(sql) > 0:
                 if len(sql) >= 5:
                     self.check_ip()

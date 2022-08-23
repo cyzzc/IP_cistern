@@ -49,8 +49,10 @@ class HttpRe(BaseData):
                 if location != -1:
                     # print(location)
                     self.sql.insert_data([data[0], data[1], data[2], data[3], location])
+                    # self.filter_data.setdefault(data[0], [data[0], data[1], data[2], data[3], location])
                 # 删除节点筛选
-                self.sql.delete_data(ip_port, sql_name)
+                # self.sql.delete_data(ip_port, sql_name)
+                self.del_filter_data(data[0])
             elif sql_name == 'acting':
                 if http_ip_port in self.del_ip_list:
                     # 如果正常了，那就不怀疑了XD
@@ -65,7 +67,10 @@ class HttpRe(BaseData):
                 else:
                     self.del_ip_list.append(http_ip_port)
             elif sql_name == 'filter':
-                self.sql.delete_data(ip_port, sql_name)
+                # self.sql.delete_data(ip_port, sql_name)
+                # print(e)
+                self.del_filter_data(data[0])
+                pass
 
     def check_ip(self, sql_name='filter'):
         """
@@ -74,9 +79,13 @@ class HttpRe(BaseData):
         :return:
         """
         if not self.getting_ip_flag:
-            sq = self.sql.select_data("Null", sql_name)
+            if sql_name == "acting":
+                sq = self.sql.select_data("Null", sql_name)
+            else:
+                sq = list(self.filter_data.values())
             # print(sq)
             for i in sq:
+                # print(i)
                 # t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
                 self.all_task_list.append(self.pool.submit(self.http_request, i[3] + "://" + i[0], i[0], i, sql_name))
             self.getting_ip_flag = True

@@ -1,11 +1,12 @@
 from flask import Flask
 
-from com.detect.write_file import check_node
+from com.detect.write_file import WriteFile
 from com.other.conn import read_yaml
 from com.other.log import rz
 
 port = read_yaml()
 app = Flask(__name__)
+WF = WriteFile()
 
 
 @app.route("/")
@@ -25,7 +26,7 @@ def js():
     代理的接口
     :return: 返回协议://ip:端口
     """
-    result = check_node()
+    result = WF.check_node()
     # 若检查不过，返回127.0.0.1
     return result if result != -1 else 'http://127.0.0.1'
 
