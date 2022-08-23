@@ -10,7 +10,7 @@ docker run -dit \
   -p 5001:5001 \
   --name http \
   --restart unless-stopped \
-  xgzk/httpproxy:2.2.0
+  xgzk/httpproxy:latest
 ```
 挂载目录会报错，就没有挂载目录
 
