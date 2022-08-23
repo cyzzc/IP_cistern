@@ -17,8 +17,9 @@ stream_format = logging.Formatter('[%(asctime)s] : %(message)s')
 logging_format = logging.Formatter('[%(asctime)s] : %(message)s')
 handler.setFormatter(logging_format)  # 为改处理器handler 选择一个格式化器
 stream_handler.setFormatter(stream_format)
-logger.addHandler(handler)  # 为记录器添加 处理方式Handler
-logger.addHandler(stream_handler)
+if not logger.handlers:
+    logger.addHandler(handler)  # 为记录器添加 处理方式Handler
+    logger.addHandler(stream_handler)
 
 
 def login(txt):
@@ -35,6 +36,7 @@ def del_log():
     # 当文件大于1M时，删除文件
     if os.path.getsize(path) > 1242880:
         os.remove(path)
+
 
 def rz():
     """

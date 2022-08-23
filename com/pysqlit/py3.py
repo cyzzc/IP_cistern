@@ -1,5 +1,9 @@
 # -*- coding:utf8 -*-
+import random
 import sqlite3
+import time
+
+from com.pysqlit.sqlite_queue import SqliteQueue
 
 from com.other.conn import read_yaml
 
@@ -7,10 +11,17 @@ db_path = read_yaml()["db"]
 
 
 class IPsql:
+    """
+    初始化
+    """
 
     def __init__(self):
-        self.conn = sqlite3.connect(db_path, timeout=10)
-        self.cursor = self.conn.cursor()
+        self.queue_sql = SqliteQueue(db_path, wait=15)
+        self.queue_sql.setDaemon(False)  # 默认为守护线程
+        self.queue_sql.start()
+        pass
+        # self.conn = sqlite3.connect(db_path, timeout=10)
+        # self.cursor = self.conn.cursor()
 
     def create_table(self) -> int:
         """
@@ -21,8 +32,7 @@ class IPsql:
             # 创建表 ip= 服务器ip port=端口 protocol=协议 country=国家，ip不能为空和唯一
             sql = "create table acting(ip_port varchar(20) primary key,ip varchar(15) not null,port int(6) not null,  " \
                   "protocol varchar(6), country varchar(10)) "
-            self.cursor.execute(sql)
-            self.conn.commit()
+            self.queue_sql.register_execute(sql)
             return 0
         except Exception as e:
             return -1
@@ -34,7 +44,6 @@ class IPsql:
         :param table_name: 表名,默认acting
         :return: 0 or -1
         """
-        global sql
         try:
             if isinstance(data, list):
                 # 获取data长度
@@ -47,12 +56,12 @@ class IPsql:
                     sql = f"INSERT INTO {table_name} VALUES ('{data[0]}','{data[1]}',{data[2]},'{data[3]}', '{lis[1]}')"
                 elif long == 3:
                     sql = f"INSERT INTO {table_name} VALUES ('{data[0]}','{data[1]}',{data[2]}, '{lis[0]}', '{lis[1]}')"
-                self.cursor.execute(sql)
+                else:
+                    sql = " "
+                self.queue_sql.register_execute(sql)
             return 0
         except Exception as e:
             return -1
-        finally:
-            self.conn.commit()
 
     def select_data(self, country="Null", surface='acting') -> list:
         """
@@ -61,16 +70,24 @@ class IPsql:
         :param surface: 数据库表名，默认acting
         :return: http或https的代理,反之-1
         """
+
         try:
+            time.sleep(random.uniform(0.8, 1.8))
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            # _results = []
             if country != "Null":
-                self.cursor.execute(f"select * from {surface} where country='{country}'")
+                cursor.execute(f"select * from {surface} where country='{country}'")
             else:
-                self.cursor.execute(f"select * from {surface}")
+                cursor.execute(f"select * from {surface}")
             # 获取查询数据
-            results = self.cursor.fetchall()
-            return results
+            _results = cursor.fetchall()
+            return _results
         except Exception as e:
             return []
+        finally:
+            cursor.close()
+            conn.close()
 
     def delete_data(self, ip_port, surface='acting') -> int:
         """
@@ -80,19 +97,18 @@ class IPsql:
         :return: 正常返回0，不正常返回1
         """
         try:
-            self.conn.execute(f"delete from {surface} where ip_port='{ip_port}'")
-            self.conn.commit()
+            self.queue_sql.register_execute(f"delete from {surface} where ip_port='{ip_port}'")
             return 0
         except Exception as e:
             return -1
 
-    def close(self):
-        """
-        关闭数据库
-        :return:
-        """
-        try:
-            self.cursor.close()
-            self.conn.close()
-        except Exception as ex:
-            raise Exception("关闭数据库连接失败")
+    # def close(self):
+    #     """
+    #     关闭数据库
+    #     :return:
+    #     """
+    #     try:
+    #         self.cursor.close()
+    #         self.conn.close()
+    #     except Exception as ex:
+    #         raise Exception("关闭数据库连接失败")
