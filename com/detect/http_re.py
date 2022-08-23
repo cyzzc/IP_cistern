@@ -41,8 +41,10 @@ class HttpRe(BaseData):
             # 请求超过3秒，就认为节点不可用
             # print(AGlevel)
             for i in range(0, self.AGlevel):
-                requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, allow_redirects=False,
-                             timeout=20, verify=False)
+                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, allow_redirects=False,
+                                 timeout=20, verify=False)
+                if r.status_code != 200:
+                    raise ConnectionError
             if sql_name == 'filter':
                 location = country_ip(proxies)
                 # 检测成功添加到可用代理的数据库中
