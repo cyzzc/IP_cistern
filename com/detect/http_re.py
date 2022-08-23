@@ -42,11 +42,11 @@ class HttpRe(BaseData):
             # 请求超过3秒，就认为节点不可用
             # print(AGlevel)
             for i in range(0, self.AGlevel):
-                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, timeout=10)
+                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, timeout=10, verify=False)
                 if r.status_code != 200:
                     raise ConnectionError
             second = self.ping(data[1], unit='ms', timeout=10)
-            if second >= 1000.0:
+            if second and second >= 1000.0:
                 self.del_filter_data(data[0])
             elif sql_name == 'filter':
                 location = country_ip(proxies)

@@ -52,7 +52,7 @@ class WriteFile(BaseData):
                             break
                     self.last_choice = [random_ip, randomnum]
                     second = self.ping(sql[randomnum][1], unit='ms', timeout=10)
-                    if second < 1000.0:
+                    if second and second < 1000.0:
                         return random_ip
                     else:
                         return self.read_node(self.sql)
