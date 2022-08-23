@@ -11,7 +11,7 @@ from com.other.conn import read_yaml
 from com.other.country import country_revise, aglevel
 
 scheduler = APScheduler()
-pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="get_ip_")
+pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
 all_task_list = []
 getting_ip_flag = False
 
