@@ -1,8 +1,12 @@
+import random
 import threading
+from queue import Queue
 
+from com.other.conn import read_yaml
 from com.other.log import login
 from com.other.heade import get_user_agent
 from com.pysqlit.py3 import IPsql
+from ping3 import ping, verbose_ping
 
 
 class BaseData:
@@ -12,11 +16,17 @@ class BaseData:
         self.user_agent = get_user_agent()
         self.filter_data = dict()
         self.threadingLock = threading.Lock()
+        self.ping = ping
+        self.info_queue = Queue()
+        self.pause_flag = False
+        self.getting_ip_flag = False
+        self.api_url = read_yaml()["IPAPI"]
 
     def clear_filter_data(self):
-        self.filter_data = {}
+        self.filter_data.clear()
 
     def add_filter_data(self, k: str, v):
+        print(k, v)
         self.threadingLock.acquire()
         if len(v) == 3:
             # 直接抛出异常
@@ -28,7 +38,8 @@ class BaseData:
         try:
             # print("删除:", k)
             self.threadingLock.acquire()
-            self.filter_data.pop(k)
+            if self.filter_data.get(k):
+                self.filter_data.pop(k)
             self.threadingLock.release()
         except Exception as e:
             print("del_filter_data抛出异常-", e)

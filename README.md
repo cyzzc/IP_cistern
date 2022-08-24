@@ -27,6 +27,12 @@ docker rmi -f xgzk/httpproxy:2.1.0 #2.0.1是版本号,
 http://IP:端口/http
 # 日志接口
 http://IP:端口/log
+# 暂停分配代理接口
+http://IP:端口/pause
+# 恢复分配代理接口
+http://IP:端口/continue
+# 获取当前IP池所有IP的接口
+http://IP:端口/getall
 ```
 ## 自己搭建教程
 安装所需库
@@ -82,6 +88,7 @@ global-agent
 ```text
 requests
 pysocks
+ping3
 proxynova-scraper
 ```
 

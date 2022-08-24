@@ -57,6 +57,6 @@ def aglevel():
     """
     read = read_yaml()
     # 获取1-5之间的随机数
-    ra = random.randint(1, 5)
-    revise_yaml(f"country: {ra}", read['Label']['AGlevel'])
+    ra = random.randint(1, 6)
+    revise_yaml(f"AGlevel: {ra}", read['Label']['AGlevel'])
     login(f"AGlevel更新为{ra}")

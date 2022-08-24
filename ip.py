@@ -13,7 +13,6 @@ from com.other.country import country_revise, aglevel
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
 all_task_list = []
-getting_ip_flag = False
 
 
 class RunMain(GetIp, HttpRe):
@@ -26,8 +25,8 @@ class RunMain(GetIp, HttpRe):
         执行爬取
         :return:
         """
-        global all_task_list, getting_ip_flag
-        if getting_ip_flag:
+        global all_task_list
+        if self.getting_ip_flag:
             self.log_write("爬取IP任务池中已有任务，阻断此次任务提交！")
             return
         area = read_yaml()
@@ -65,7 +64,7 @@ class RunMain(GetIp, HttpRe):
         if area['country'] != '国内':
             all_task_list.append(pool.submit(ip_db.get("get_crape")))
         self.log_write("任务已全部提交，开始爬取ip")
-        getting_ip_flag = True
+        self.getting_ip_flag = True
         t3 = threading.Thread(target=self.check_all_task_list_thread)
         t3.start()
         # wait(all_task_list, return_when=ALL_COMPLETED)
@@ -76,11 +75,11 @@ class RunMain(GetIp, HttpRe):
         """
         监听线程池任务线程，防止重复提交到任务池
         """
-        global all_task_list, getting_ip_flag
+        global all_task_list
         wait(all_task_list, return_when=ALL_COMPLETED)
         self.log_write("爬取ip完毕，休息10min")
         time.sleep(600)
-        getting_ip_flag = False
+        self.getting_ip_flag = False
 
     def check_add_ip_thread(self):
         """
