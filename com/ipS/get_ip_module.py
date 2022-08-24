@@ -39,11 +39,11 @@ class GetIp(BaseData):
                                      [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], "http"])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_66ip.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_66ip: " + f'{str(e)}')
 
     def get_crape(self):
         try:
-            reps = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=all",
+            reps = requests.get("https://api.proxyscrape.com/?request=displayproxies",
                                 headers=self.user_agent, timeout=20, verify=False)
             # 设置编码
             reps.encoding = "utf-8"
@@ -57,10 +57,10 @@ class GetIp(BaseData):
             http_port = re_port.findall(re1)
             for i in range(len(http_ip)):
                 # self.sql.insert_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i]], 'filter')
-                self.add_filter_data([http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], "http"])
+                self.add_filter_data(http_ip[i] + ':' + http_port[i], [http_ip[i] + ':' + http_port[i], http_ip[i], http_port[i], "http", "EU"])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_crape.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题，com-->ipS-->get_ip_module.py-->get_crape: " + f'{str(e)} 国内异常不用管，国外服务器用的')
 
     def get_github(self):
         try:
@@ -116,7 +116,7 @@ class GetIp(BaseData):
                                               int(http_port[i]), _type, "Github"])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_github.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_github: " + f'{str(e)}')
 
     def get_ip3366(self):
         try:
@@ -144,7 +144,7 @@ class GetIp(BaseData):
                     return 0
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_ip3366.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_ip_module-->get_ip3366: " + f'{str(e)}')
 
     def get_jxl(self):
         """
@@ -184,7 +184,7 @@ class GetIp(BaseData):
                                           http_ip_type[http_type[i]]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_jiangxianli.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_jiangxianli: " + f'{str(e)}')
 
     def get_kuai(self):
         try:
@@ -213,7 +213,7 @@ class GetIp(BaseData):
                         return 0
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_kxdaili: " + f'{str(e)}')
 
     def get_proxydb(self):
         """
@@ -235,7 +235,7 @@ class GetIp(BaseData):
                 return http_country
             except Exception as e:
                 self.log_write(
-                    "异常问题，com-->ipS-->get_proxydb.py-->get_list: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                    "异常问题,com-->ipS-->get_ip_module.py-->get_ip_module.py-->get_proxydb-->get_list: " + f'{str(e)}')
                 return []
 
         try:
@@ -267,7 +267,7 @@ class GetIp(BaseData):
                                               http_port[i], http_type[i]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_proxydb.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_proxydb.py: " + f'{str(e)}')
 
     def get_fate(self):
         try:
@@ -302,7 +302,7 @@ class GetIp(BaseData):
                                           http_country[i]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_kxdaili.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_kxdaili.py: " + f'{str(e)}')
 
     def get_proxynova(self, area="CN"):
         """
@@ -330,7 +330,7 @@ class GetIp(BaseData):
 
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_proxynova.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_proxynova: " + f'{str(e)}')
 
     def get_pzz(self):
         try:
@@ -367,7 +367,7 @@ class GetIp(BaseData):
                          http_country[i]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_pzzqz.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题,com-->ipS-->get_ip_module.py-->get_pzzqz.py: " + f'{str(e)}')
 
     def get_scan(self):
         """
@@ -403,7 +403,7 @@ class GetIp(BaseData):
                      http_country[i]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_scan.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题，com-->ipS-->get_ip_module.py-->get_scan: " + f'{str(e)}')
 
     def get_v1(self):
         try:
@@ -426,7 +426,7 @@ class GetIp(BaseData):
                     [http_ip[v] + ':' + http_port[v], http_ip[v], http_port[v], "http"])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->get_v1.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题，com-->ipS-->get_ip_module.py-->get_v1: " + f'{str(e)}')
 
     def get_git_ip(self):
         try:
@@ -461,7 +461,7 @@ class GetIp(BaseData):
                          http_country[i]])
         except Exception as e:
             self.log_write(
-                "异常问题，com-->ipS-->git_poxy.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常问题，com-->ipS-->get_ip_module.py-->git_poxy: " + f'{str(e)}')
 
     def get_uu_proxy(self):
         """
@@ -489,4 +489,4 @@ class GetIp(BaseData):
             strhtml.close()
         except Exception as e:
             self.log_write(
-                "异常提示,com-->ipS-->ip_pool.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+                "异常提示,com-->ipS-->get_ip_module.py-->ip_pool.py: " + f'{str(e)}')

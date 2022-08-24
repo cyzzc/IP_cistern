@@ -177,6 +177,11 @@ if (null == htt.match('127\.0\.0\.1') && htt.length > 16) {
 然后就成了
 ```
 
+#### 星空代理自动签到
+拉库 ql repo  https://github.com/XgzK/JD_annex.git "qd_" "" "notify"
+青龙配置文件填写 export xingkong ="账户1:密码&账户2:密码"
+如果你青龙添加了消息通知，签到后将会收到通知
+
 ## 有想捐赠的可以捐赠下
 
 <img src="./img/wx.jpg" alt="微信收款码" height="300px" width="300px">
