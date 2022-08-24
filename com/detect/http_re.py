@@ -54,6 +54,7 @@ class HttpRe(BaseData):
                 if location != -1:
                     # print(location)
                     self.sql.insert_data([data[0], data[1], data[2], data[3], location])
+                    print("提交成功")
                     # self.filter_data.setdefault(data[0], [data[0], data[1], data[2], data[3], location])
                 # 删除节点筛选
                 # self.sql.delete_data(ip_port, sql_name)

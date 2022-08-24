@@ -27,13 +27,18 @@ docker rmi -f xgzk/httpproxy:2.1.0 #2.0.1是版本号,
 http://IP:端口/http
 # 日志接口
 http://IP:端口/log
-# 暂停分配代理接口
-http://IP:端口/pause
-# 恢复分配代理接口
-http://IP:端口/continue
+# 暂停和恢复分配代理接口
+http://IP:端口/
 # 获取当前IP池所有IP的接口
 http://IP:端口/getall
 ```
+## 星空代理注册
+
+[点我去注册账号](http://www.xkdaili.com/?ic=4deqad9q)
+邀请码: `4deqad9q`
+*开发过程中吞了我不少IP，让开发者回回血吧QAQ*
+**生成单个IP且为TXT格式的api才能使用**
+
 ## 自己搭建教程
 安装所需库
 ```pip3
@@ -171,15 +176,6 @@ if (null == htt.match('127\.0\.0\.1') && htt.length > 16) {
 每拉取一个库就修改一个使用代理的情况下，不修改会不走代理
 然后就成了
 ```
-## 付费代理池注册配置注意事项
-
-[点我去注册账号](http://www.xkdaili.com/?ic=4deqad9q)
-
-邀请码: `4deqad9q`
-
-*开发过程中吞了我不少IP，让开发者回回血吧QAQ*
-
-**生成单个IP且为TXT格式的api才能使用**
 
 ## 有想捐赠的可以捐赠下
 
