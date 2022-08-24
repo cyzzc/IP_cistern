@@ -13,12 +13,19 @@ class GetNoFreeIp(BaseData):
         super().__init__()
         self.time_kill = []
         self.http_ip = None
+        self.http_ip_port = None
 
     def time_kill_thread(self, _time=5):
         _count = 0
         while _count < 2:
             time.sleep(_time)
             try:
+                proxies = {
+                    'http': self.http_ip_port,
+                    'https': self.http_ip_port
+                }
+                requests.get("https://api.m.jd.com/", proxies=proxies,
+                             headers=self.user_agent, timeout=10, verify=False).close()
                 second = self.ping(self.http_ip, unit='ms', timeout=5)
                 # print(second)
                 if second and second > 1000.0:
@@ -62,6 +69,7 @@ class GetNoFreeIp(BaseData):
                 re_port = re.compile(r':(\d{2,6})')
                 self.http_ip = re_ip.findall(re1)[0]
                 http_port = re_port.findall(re1)[0]
+                self.http_ip_port = self.http_ip+':'+http_port
                 if not self.time_kill:
                     self.time_kill.append("{}://{}:{}".format("http", self.http_ip, http_port))
                     t = threading.Thread(target=self.time_kill_thread)
@@ -75,3 +83,4 @@ class GetNoFreeIp(BaseData):
         except Exception as e:
             self.log_write(
                 "异常问题，com-->ipS-->get_nofree.py: " + f'<em style="color: rgb(255, 0, 0); font-weight: bolder">{str(e)}</em>')
+            return -1
