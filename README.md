@@ -88,6 +88,7 @@ global-agent
 ```text
 requests
 pysocks
+ping3
 proxynova-scraper
 ```
 
