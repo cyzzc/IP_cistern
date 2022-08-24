@@ -49,10 +49,10 @@ def get_all_ip():
     return Order.get_all_acting_ip()
 
 
-@app.route('/api/mod/<_url>', methods=['GET'])
-def revise_api(_url):
-    Order.revise_api(_url)
-    return "提交修改！"
+# @app.route('/api/mod/<_url>', methods=['GET'])
+# def revise_api(_url):
+#     Order.revise_api(_url)
+#     return "提交修改！"
 
 
 # 接收get请求 /http
