@@ -1,6 +1,7 @@
 from flask import Flask
 
 from com.detect.write_file import WriteFile
+from com.ipS.get_nofree_ip_module import GetNoFreeIp
 from com.other.conn import read_yaml
 from com.other.log import rz
 from com.other.order import Order
@@ -9,6 +10,7 @@ port = read_yaml()
 app = Flask(__name__)
 WF = WriteFile()
 Order = Order()
+GNF = GetNoFreeIp()
 ip_pause_flags = False
 
 
@@ -47,6 +49,12 @@ def get_all_ip():
     return Order.get_all_acting_ip()
 
 
+@app.route('/api/mod/<_url>', methods=['GET'])
+def revise_api(_url):
+    Order.revise_api(_url)
+    return "提交修改！"
+
+
 # 接收get请求 /http
 @app.route("/http", methods=["GET"])
 def http():
@@ -57,7 +65,9 @@ def http():
     global ip_pause_flags
     if ip_pause_flags:
         return 'http://127.0.0.1'
-    result = WF.check_node()
+    result = GNF.get_nofree()
+    if result == -1:
+        result = WF.check_node()
     # 若检查不过，返回127.0.0.1
     return result if result != -1 else 'http://127.0.0.1'
 

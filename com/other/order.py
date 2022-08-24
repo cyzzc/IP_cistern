@@ -1,6 +1,7 @@
 import time
 
 from com.interface.base import BaseData
+from com.other.conn import revise_yaml, read_yaml
 
 
 class Order(BaseData):
@@ -26,4 +27,8 @@ class Order(BaseData):
 
     def get_all_acting_ip(self):
         return self.sql.select_data()
+
+    def revise_api(self, _url):
+        read = read_yaml()
+        revise_yaml(f"IPAPI: {_url}", read['Label']['IPAPI'])
 

@@ -2,6 +2,7 @@ import random
 import threading
 from queue import Queue
 
+from com.other.conn import read_yaml
 from com.other.log import login
 from com.other.heade import get_user_agent
 from com.pysqlit.py3 import IPsql
@@ -19,6 +20,7 @@ class BaseData:
         self.info_queue = Queue()
         self.pause_flag = False
         self.getting_ip_flag = False
+        self.api_url = read_yaml()["IPAPI"]
 
     def clear_filter_data(self):
         self.filter_data.clear()
