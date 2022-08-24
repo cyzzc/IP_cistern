@@ -12,7 +12,7 @@ class HttpRe(BaseData):
         super().__init__()
         self.pool = ThreadPoolExecutor(max_workers=200, thread_name_prefix="check_ip_")
         self.all_task_list = []
-        self.getting_ip_flag = False
+        self._getting_ip_flag = False
         self.del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
 
     def http_request(self, http_ip_port, ip_port, data, sql_name='filter'):
@@ -41,12 +41,13 @@ class HttpRe(BaseData):
             # 请求超过3秒，就认为节点不可用
             # print(AGlevel)
             for i in range(0, self.AGlevel):
-                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, timeout=10, verify=False)
+                r = requests.get(check_wb[i], proxies=proxies, headers=self.user_agent, timeout=20, verify=False)
                 if r.status_code != 200:
                     raise ConnectionError
             second = self.ping(data[1], unit='ms', timeout=10)
             if second and second >= 1000.0:
                 self.del_filter_data(data[0])
+                # print(data[0])
             elif sql_name == 'filter':
                 location = country_ip(proxies)
                 # 检测成功添加到可用代理的数据库中
@@ -81,7 +82,8 @@ class HttpRe(BaseData):
         :param sql_name:
         :return:
         """
-        if not self.getting_ip_flag:
+        # print(self._getting_ip_flag)
+        if not self._getting_ip_flag:
             if sql_name == "acting":
                 sq = self.sql.select_data("Null", sql_name)
             else:
@@ -91,7 +93,7 @@ class HttpRe(BaseData):
                 # print(i)
                 # t = threading.Thread(target=http_request, args=(i[3] + "://" + i[0], i[0], i, sql_name,))
                 self.all_task_list.append(self.pool.submit(self.http_request, i[3] + "://" + i[0], i[0], i, sql_name))
-            self.getting_ip_flag = True
+            self._getting_ip_flag = True
             wait(self.all_task_list, return_when=ALL_COMPLETED)
             self.all_task_list = []
-            self.getting_ip_flag = False
+            self._getting_ip_flag = False

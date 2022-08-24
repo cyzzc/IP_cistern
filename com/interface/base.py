@@ -27,7 +27,7 @@ class BaseData:
         self.filter_data.clear()
 
     def add_filter_data(self, k: str, v):
-        print(k, v)
+        # print(k, v)
         self.threadingLock.acquire()
         if len(v) == 3:
             # 直接抛出异常
