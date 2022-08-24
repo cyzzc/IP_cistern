@@ -32,3 +32,7 @@ class Order(BaseData):
         read = read_yaml()
         revise_yaml(f"IPAPI: {_url}", read['Label']['IPAPI'])
 
+    def flash_all_yaml(self):
+        self.flash_AGlevel()
+        self.flash_api_url()
+

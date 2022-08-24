@@ -6,6 +6,7 @@ import time
 import requests
 
 from com.interface.base import BaseData
+from com.other.conn import read_yaml
 
 
 class GetNoFreeIp(BaseData):
@@ -14,11 +15,13 @@ class GetNoFreeIp(BaseData):
         self.time_kill = []
         self.http_ip = None
         self.http_ip_port = None
+        self.__spend_time = 0
 
     def time_kill_thread(self, _time=5):
         _count = 0
         while _count < 2:
             time.sleep(_time)
+            self.__spend_time += _time
             try:
                 # proxies = {
                 #     'http': self.http_ip_port,
@@ -53,31 +56,34 @@ class GetNoFreeIp(BaseData):
                 return self.time_kill[0]
 
             if url is None:
-                url = self.api_url
-                if not self.api_url:
+                url = read_yaml()["IPAPI"]
+                if not url:
                     return -1
 
             if not self.time_kill:
-                time.sleep(0.8)
-                reps = requests.get(url,
-                                    headers=self.user_agent, verify=False, timeout=20)
-                # 设置编码
-                reps.encoding = "utf-8"
-                re1 = reps.text
-                # 正则表达式
-                # 分别是IP，端口，类型，国家
-                re_ip = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
-                re_port = re.compile(r':(\d{2,6})')
-                self.http_ip = re_ip.findall(re1)[0]
-                http_port = re_port.findall(re1)[0]
-                self.http_ip_port = self.http_ip + ':' + http_port
-                if not self.time_kill:
-                    self.time_kill.append("{}://{}:{}".format("http", self.http_ip, http_port))
-                    t = threading.Thread(target=self.time_kill_thread)
-                    t.start()
-                    return self.time_kill[0]
-                else:
-                    return -1
+                for _url in url:
+                    time.sleep(0.8)
+                    reps = requests.get(url,
+                                        headers=self.user_agent, verify=False, timeout=20)
+                    if reps.status_code != 200:
+                        continue
+                    # 设置编码
+                    reps.encoding = "utf-8"
+                    re1 = reps.text
+                    # 正则表达式
+                    # 分别是IP，端口，类型，国家
+                    re_ip = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+                    re_port = re.compile(r':(\d{2,6})')
+                    self.http_ip = re_ip.findall(re1)[0]
+                    http_port = re_port.findall(re1)[0]
+                    self.http_ip_port = self.http_ip + ':' + http_port
+                    if not self.time_kill:
+                        self.time_kill.append("{}://{}:{}".format("http", self.http_ip, http_port))
+                        t = threading.Thread(target=self.time_kill_thread)
+                        t.start()
+                        return self.time_kill[0]
+                    else:
+                        return -1
             else:
                 return self.time_kill[0]
 

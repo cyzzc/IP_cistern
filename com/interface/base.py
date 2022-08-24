@@ -20,7 +20,7 @@ class BaseData:
         self.info_queue = Queue()
         self.pause_flag = False
         self.getting_ip_flag = False
-        self.api_url = read_yaml()["IPAPI"]
+        self.api_url = None
         self.AGlevel = read_yaml()["AGlevel"]
 
     def clear_filter_data(self):
@@ -44,3 +44,9 @@ class BaseData:
             self.threadingLock.release()
         except Exception as e:
             print("del_filter_data抛出异常-", e)
+
+    def flash_AGlevel(self):
+        self.api_url = read_yaml()["IPAPI"]
+
+    def flash_api_url(self):
+        self.AGlevel = read_yaml()["AGlevel"]

@@ -31,14 +31,16 @@ def register():
             mark = "提交API成功"
         if tf == "start":
             ip_pause_flags = False
-            return "恢复分配IP"
+            return render_template('ip.html', ip_pause_flags=ip_pause_flags)
         elif tf == "stop":
             ip_pause_flags = True
-            return "已暂停分配IP"
+            return render_template('ip.html', ip_pause_flags=ip_pause_flags)
         else:
-            return mark
+            return render_template('ip.html',
+                                   ip_pause_flags=ip_pause_flags,
+                                   msg=mark)
     else:
-        return render_template('ip.html')
+        return render_template('ip.html', ip_pause_flags=ip_pause_flags)
 
 
 @app.route('/log', methods=['GET'])
@@ -71,7 +73,21 @@ def get_all_ip():
 @app.route("/http", methods=["GET"])
 def http():
     """
-    代理的接口
+    免费代理的接口
+    :return: 返回协议://ip:端口
+    """
+    global ip_pause_flags
+    if ip_pause_flags:
+        return 'http://127.0.0.1'
+    result = WF.check_node()
+    # 若检查不过，返回127.0.0.1
+    return result if result != -1 else 'http://127.0.0.1'
+
+
+@app.route("/nofreehttp", methods=["GET"])
+def nofree_http():
+    """
+    付费代理的接口
     :return: 返回协议://ip:端口
     """
     global ip_pause_flags
