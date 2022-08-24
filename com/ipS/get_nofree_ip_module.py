@@ -51,7 +51,7 @@ class GetNoFreeIp(BaseData):
                 self.http_ip = re_ip.findall(re1)[0]
                 http_port = re_port.findall(re1)[0]
                 if not self.time_kill:
-                    self.time_kill.append("{}://{}:{}".format("https", self.http_ip, http_port))
+                    self.time_kill.append("{}://{}:{}".format("http", self.http_ip, http_port))
                     t = threading.Thread(target=self.time_kill_thread)
                     t.start()
                     return self.time_kill[0]
