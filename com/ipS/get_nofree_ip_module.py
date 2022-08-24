@@ -20,12 +20,12 @@ class GetNoFreeIp(BaseData):
         while _count < 2:
             time.sleep(_time)
             try:
-                proxies = {
-                    'http': self.http_ip_port,
-                    'https': self.http_ip_port
-                }
-                requests.get("https://api.m.jd.com/", proxies=proxies,
-                             headers=self.user_agent, timeout=10, verify=False).close()
+                # proxies = {
+                #     'http': self.http_ip_port,
+                #     'https': self.http_ip_port
+                # }
+                # requests.get("https://api.m.jd.com/", proxies=proxies,
+                #              headers=self.user_agent, timeout=10, verify=False).close()
                 second = self.ping(self.http_ip, unit='ms', timeout=5)
                 # print(second)
                 if second and second > 1000.0:
@@ -37,10 +37,10 @@ class GetNoFreeIp(BaseData):
                     _count += 1
                 elif second:
                     _count -= 1
-
             except Exception:
                 self.time_kill.clear()
                 break
+        self.time_kill.clear()  # 保底清空
 
     def get_nofree(self, url=None):
         """
@@ -56,6 +56,7 @@ class GetNoFreeIp(BaseData):
                 url = self.api_url
                 if not self.api_url:
                     return -1
+
             if not self.time_kill:
                 time.sleep(0.8)
                 reps = requests.get(url,
@@ -69,7 +70,7 @@ class GetNoFreeIp(BaseData):
                 re_port = re.compile(r':(\d{2,6})')
                 self.http_ip = re_ip.findall(re1)[0]
                 http_port = re_port.findall(re1)[0]
-                self.http_ip_port = self.http_ip+':'+http_port
+                self.http_ip_port = self.http_ip + ':' + http_port
                 if not self.time_kill:
                     self.time_kill.append("{}://{}:{}".format("http", self.http_ip, http_port))
                     t = threading.Thread(target=self.time_kill_thread)
