@@ -14,13 +14,25 @@ class GetNoFreeIp(BaseData):
         self.time_kill = []
         self.http_ip = None
 
-    def time_kill_thread(self, _time=3):
-        while True:
+    def time_kill_thread(self, _time=5):
+        _count = 0
+        while _count < 2:
             time.sleep(_time)
-            second = self.ping(self.http_ip, unit='ms', timeout=1)
-            if second and second > 1000.0:
+            try:
+                second = self.ping(self.http_ip, unit='ms', timeout=5)
+                # print(second)
+                if second and second > 1000.0:
+                    self.time_kill.clear()
+                    # print(self.http_ip, "挂了")
+                    break
+                elif not second:
+                    self.time_kill.clear()
+                    _count += 1
+                elif second:
+                    _count -= 1
+
+            except Exception:
                 self.time_kill.clear()
-                # print(self.http_ip, "挂了")
                 break
 
     def get_nofree(self, url=None):
