@@ -171,7 +171,18 @@ if (null == htt.match('127\.0\.0\.1') && htt.length > 16) {
 每拉取一个库就修改一个使用代理的情况下，不修改会不走代理
 然后就成了
 ```
+## 付费代理池注册配置注意事项
+
+[点我去注册账号](http://www.xkdaili.com/?ic=4deqad9q)
+
+邀请码: `4deqad9q`
+
+*开发过程中吞了我不少IP，让开发者回回血吧QAQ*
+
+**生成单个IP且为TXT格式的api才能使用**
+
 ## 有想捐赠的可以捐赠下
+
 <img src="./img/wx.jpg" alt="微信收款码" height="300px" width="300px">
 <img src="./img/zfb.jpg" alt="支付宝收款码" height="300px" width="300px">
 
@@ -237,7 +248,6 @@ https://www.proxynova.com/ 3个可用
 http://httpbin.org/ip 显示IP的
   </code></pre>
 </details>
-
 <details>
   <summary>版本更新</summary>
   <pre><code> 
@@ -283,8 +293,10 @@ http://httpbin.org/ip 显示IP的
     > 增加并修复了一些代理池
     > 筛选池改为内存缓冲，数据库改为队列数据库
     > 响应速度更快
+    > 支持付费代理池API
   </code></pre>
 </details>
+
 
 <details>
   <summary>问题</summary>

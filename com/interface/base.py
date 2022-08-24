@@ -21,6 +21,7 @@ class BaseData:
         self.pause_flag = False
         self.getting_ip_flag = False
         self.api_url = read_yaml()["IPAPI"]
+        self.AGlevel = read_yaml()["AGlevel"]
 
     def clear_filter_data(self):
         self.filter_data.clear()

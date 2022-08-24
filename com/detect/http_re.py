@@ -10,8 +10,7 @@ from com.other.country import country_ip
 class HttpRe(BaseData):
     def __init__(self):
         super().__init__()
-        self.AGlevel = read_yaml()["AGlevel"]
-        self.pool = ThreadPoolExecutor(max_workers=100, thread_name_prefix="check_ip_")
+        self.pool = ThreadPoolExecutor(max_workers=200, thread_name_prefix="check_ip_")
         self.all_task_list = []
         self.getting_ip_flag = False
         self.del_ip_list = []  # 怀疑列表（因网络波动造成误判，需二次确认才删除ip）
