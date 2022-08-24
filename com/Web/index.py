@@ -21,8 +21,12 @@ def register():
     mark = "你没有提交任何内容"
     if request.method == 'POST':
         tf = request.form.get('tf')
-        url = request.form.get('url')
-        if url:
+        urls = request.form.get('url')
+        if urls:
+            # 按照空格分隔
+            url = urls.split(" ")
+            # 如果有空元素去除，防止输入多个空格
+            url = [i for i in url if (len(str(i)) != 0)]
             Order.revise_api(url)
             mark = "提交API成功"
         if tf == "start":
