@@ -165,3 +165,4 @@ class RunMain(GetIp, HttpRe):
 
 if __name__ == '__main__':
     RunMain().run_main()
+    run_web()

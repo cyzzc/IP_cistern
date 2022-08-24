@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, render_template
 
 from com.detect.write_file import WriteFile
 from com.ipS.get_nofree_ip_module import GetNoFreeIp
@@ -14,9 +14,27 @@ GNF = GetNoFreeIp()
 ip_pause_flags = False
 
 
-@app.route("/")
-def index():
-    return "你好本程序运行正常运行"
+@app.route('/', methods=['GET', 'POST'])
+def register():
+    """停止恢复IP分配"""
+    global ip_pause_flags
+    mark = "你没有提交任何内容"
+    if request.method == 'POST':
+        tf = request.form.get('tf')
+        url = request.form.get('url')
+        if url:
+            Order.revise_api(url)
+            mark = "提交API成功"
+        if tf == "start":
+            ip_pause_flags = False
+            return "恢复分配IP"
+        elif tf == "stop":
+            ip_pause_flags = True
+            return "已暂停分配IP"
+        else:
+            return mark
+    else:
+        return render_template('ip.html')
 
 
 @app.route('/log', methods=['GET'])
@@ -30,23 +48,13 @@ def cat_log():
 #     return "重新爬取ip任务提交成功"
 
 
-@app.route('/pause', methods=['GET'])
-def pause_ip():
-    global ip_pause_flags
-    ip_pause_flags = True
-    return "已暂停分配IP"
-
-
-@app.route('/continue', methods=['GET'])
-def continue_ip():
-    global ip_pause_flags
-    ip_pause_flags = False
-    return "恢复分配IP"
-
-
 @app.route('/getall', methods=['GET'])
 def get_all_ip():
-    return Order.get_all_acting_ip()
+    all = Order.get_all_acting_ip()
+    if len(all) > 0:
+        return render_template('check.html', name=all)
+    else:
+        return "没有可用代理"
 
 
 # @app.route('/api/mod/<_url>', methods=['GET'])
