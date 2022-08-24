@@ -33,6 +33,10 @@ class WriteFile(BaseData):
         获取随机节点
         :return: 返回协议://ip:端口 没有返回-1
         """
+        if self.pause_flag:
+            login("收到暂停信号，check_node")
+            return -1
+
         sql = self.sql.select_data(country="中国")
         if not sql:
             time.sleep(random.uniform(0.8, 2.8))
