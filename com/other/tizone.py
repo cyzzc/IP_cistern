@@ -1,8 +1,27 @@
 import re
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+
 
 from com.pysqlit.py3 import IPsql
 
+
 ti = IPsql()
+
+
+def AS():
+    """
+    获取当前时间中国时区的时间
+    :return:
+    """
+    SHA_TZ = timezone(
+        timedelta(hours=8),
+        name='Asia/Shanghai',
+    )
+    utc_now = datetime.utcnow().replace(tzinfo=timezone.utc)
+    beijing_now = utc_now.astimezone(SHA_TZ)
+    return beijing_now.strftime('%H:%M:%S')
 
 
 class Zone:

@@ -1,4 +1,4 @@
-import time
+
 
 from flask import Flask, request, render_template
 
@@ -8,7 +8,7 @@ from com.ipS.get_nofree_ip_module import GetNoFreeIp
 from com.other.conn import read_yaml
 from com.other.log import rz
 from com.other.order import Order
-from com.other.tizone import Zone
+from com.other.tizone import Zone, AS
 
 port = read_yaml()
 app = Flask(__name__)
@@ -86,9 +86,10 @@ def http():
     免费代理的接口
     :return: 返回协议://ip:端口
     """
+
     global ip_pause_flags
     # 判断是否要返回代理
-    ti = ZO.compared_ti(time.strftime('%H:%M:%S'))
+    ti = ZO.compared_ti(AS())
     if ti == 0:
         if ip_pause_flags:
             return 'http://127.0.0.1'
@@ -105,7 +106,7 @@ def nofree_http():
     :return: 返回协议://ip:端口
     """
     global ip_pause_flags
-    ti = ZO.compared_ti(time.strftime('%H:%M:%S'))
+    ti = ZO.compared_ti(AS())
     if ti == 0:
         if ip_pause_flags:
             return 'http://127.0.0.1'
