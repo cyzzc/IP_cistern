@@ -160,7 +160,6 @@ class RunMain(GetIp, HttpRe):
         t2 = threading.Thread(target=self.check_exist_ip_thread)
         t1.start()
         t2.start()
-        run_web()
 
 
 if __name__ == '__main__':

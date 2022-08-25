@@ -18,9 +18,9 @@ class Order(BaseData):
             self.getting_ip_flag = False
 
     def pause_check_node(self):
-        print(self.pause_flag)
+        # print(self.pause_flag)
         self.pause_flag = True
-        print(self.pause_flag)
+        # print(self.pause_flag)
 
     def continue_check_node(self):
         self.pause_flag = False
@@ -29,10 +29,14 @@ class Order(BaseData):
         return self.sql.select_data()
 
     def revise_api(self, _url):
-        read = read_yaml()
-        revise_yaml(f"IPAPI: {_url}", read['Label']['IPAPI'])
+        revise_yaml(f"IPAPI: {_url}", self.read()['Label']['IPAPI'])
+
+    def revise_AGlevel(self, _grade: int):
+        revise_yaml(f"AGlevel: {_grade}", self.read()['Label']['AGlevel'])
+
+    def get_AGlevel(self):
+        return self.read()["AGlevel"]
 
     def flash_all_yaml(self):
         self.flash_AGlevel()
         self.flash_api_url()
-

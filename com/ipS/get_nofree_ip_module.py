@@ -1,4 +1,3 @@
-import json
 import re
 import threading
 import time
@@ -6,15 +5,14 @@ import time
 import requests
 
 from com.interface.base import BaseData
-from com.other.conn import read_yaml
 
 
 class GetNoFreeIp(BaseData):
     def __init__(self):
         super().__init__()
         self.time_kill = []
-        self.http_ip = None
-        self.http_ip_port = None
+        self.http_ip = None  # 最新IP
+        self.http_ip_port = None  # 最新端口
         self.__spend_time = 0
 
     def time_kill_thread(self, _time=5):
@@ -50,13 +48,15 @@ class GetNoFreeIp(BaseData):
         返回txt 格式：
         27.153.5.211:22271
         只支持单个
+        不支持并发检测
         """
         try:
+            self.flash_api_url()
             if self.time_kill:
                 return self.time_kill[0]
 
             if url is None:
-                url = read_yaml()["IPAPI"]
+                url = self.api_url
                 if not url:
                     return -1
 
@@ -84,6 +84,7 @@ class GetNoFreeIp(BaseData):
                         return self.time_kill[0]
                     else:
                         return -1
+                return -1  # 全部跳出循环，不出结果
             else:
                 return self.time_kill[0]
 

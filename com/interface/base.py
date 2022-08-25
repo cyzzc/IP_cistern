@@ -12,6 +12,7 @@ from ping3 import ping, verbose_ping
 class BaseData:
     def __init__(self):
         self.sql = IPsql()
+        self.read = read_yaml
         self.log_write = login
         self.user_agent = get_user_agent()
         self.filter_data = dict()
@@ -21,7 +22,7 @@ class BaseData:
         self.pause_flag = False
         self.getting_ip_flag = False
         self.api_url = None
-        self.AGlevel = read_yaml()["AGlevel"]
+        self.AGlevel = self.read()["AGlevel"]
 
     def clear_filter_data(self):
         self.filter_data.clear()
@@ -45,8 +46,8 @@ class BaseData:
         except Exception as e:
             print("del_filter_data抛出异常-", e)
 
-    def flash_AGlevel(self):
-        self.api_url = read_yaml()["IPAPI"]
-
     def flash_api_url(self):
-        self.AGlevel = read_yaml()["AGlevel"]
+        self.api_url = self.read()["IPAPI"]
+
+    def flash_AGlevel(self):
+        self.AGlevel = self.read()["AGlevel"]
