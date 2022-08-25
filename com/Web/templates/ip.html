@@ -13,7 +13,8 @@
 <h1>此项目现在由 <a href="https://github.com/CyiceK" >CyiceK</a> 主要维护</h1>
 <form action="/" method="post">
     <label>
-        <p>代理开关,默认启动</p>
+        <p>{{ msg }}</p>
+        <p>代理开关,目前阻断状态为：{{ ip_pause_flags }}</p>
         <select name="tf">
             <optgroup label="启动和停止">
                 <option value="none" selected>不选择</option>

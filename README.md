@@ -23,8 +23,10 @@ docker rmi -f xgzk/httpproxy:2.1.0 #2.0.1是版本号,
 
 ### 接口
 ```shell
-# 代理接口
+# 免费代理池接口
 http://IP:端口/http
+# 付费代理池接口，付费池无法提取会自动降级为免费池
+http://IP:端口/nofreehttp
 # 日志接口
 http://IP:端口/log
 # 暂停和恢复分配代理接口

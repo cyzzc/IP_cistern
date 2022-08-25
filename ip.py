@@ -44,7 +44,7 @@ class RunMain(GetIp, HttpRe):
             "get_v1": self.get_v1,
             "get_jxl": self.get_jxl,
             "get_proxydb": self.get_proxydb,
-            "get_66ip": self.get_66ip,  # 小心被拉黑
+            # "get_66ip": self.get_66ip,  # 小心被拉黑
             "get_github": self.get_github,
             "get_proxynova": self.get_proxynova,  # 不能使用去方法里面查看异常信息
             "get_crape": self.get_crape  # 适配非国内环境的代理
@@ -160,7 +160,6 @@ class RunMain(GetIp, HttpRe):
         t2 = threading.Thread(target=self.check_exist_ip_thread)
         t1.start()
         t2.start()
-        run_web()
 
 
 if __name__ == '__main__':
