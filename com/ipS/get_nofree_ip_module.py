@@ -63,7 +63,7 @@ class GetNoFreeIp(BaseData):
             if not self.time_kill:
                 for _url in url:
                     time.sleep(0.8)
-                    reps = requests.get(url,
+                    reps = requests.get(_url,
                                         headers=self.user_agent, verify=False, timeout=20)
                     if reps.status_code != 200:
                         continue
