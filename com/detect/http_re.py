@@ -3,7 +3,6 @@ from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 import requests
 
 from com.interface.base import BaseData
-from com.other.conn import read_yaml
 from com.other.country import country_ip
 
 
@@ -85,6 +84,7 @@ class HttpRe(BaseData):
         """
         # print(self._getting_ip_flag)
         if not self._getting_ip_flag:
+            self.flash_AGlevel()
             if sql_name == "acting":
                 sq = self.sql.select_data("Null", sql_name)
             else:

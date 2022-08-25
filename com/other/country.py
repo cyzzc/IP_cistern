@@ -1,4 +1,3 @@
-import random
 import re
 
 import requests
@@ -49,14 +48,3 @@ def country_revise():
     else:
         revise_yaml("country: 国内", read['Label']['country'])
 
-
-def aglevel():
-    """
-    获取1-5的随机数
-    :return:
-    """
-    read = read_yaml()
-    # 获取1-5之间的随机数
-    ra = random.randint(1, 6)
-    revise_yaml(f"AGlevel: {ra}", read['Label']['AGlevel'])
-    login(f"AGlevel更新为{ra}")

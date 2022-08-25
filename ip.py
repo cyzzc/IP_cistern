@@ -8,7 +8,7 @@ from com.Web.index import run_web
 from com.detect.http_re import HttpRe
 from com.ipS.get_ip_module import GetIp
 from com.other.conn import read_yaml
-from com.other.country import country_revise, aglevel
+from com.other.country import country_revise
 
 scheduler = APScheduler()
 pool = ThreadPoolExecutor(max_workers=5, thread_name_prefix="get_ip_")
@@ -44,7 +44,7 @@ class RunMain(GetIp, HttpRe):
             "get_v1": self.get_v1,
             "get_jxl": self.get_jxl,
             "get_proxydb": self.get_proxydb,
-            "get_66ip": self.get_66ip,  # 小心被拉黑
+            # "get_66ip": self.get_66ip,  # 小心被拉黑
             "get_github": self.get_github,
             "get_proxynova": self.get_proxynova,  # 不能使用去方法里面查看异常信息
             "get_crape": self.get_crape  # 适配非国内环境的代理
@@ -113,14 +113,6 @@ class RunMain(GetIp, HttpRe):
 
     def run_main(self):
 
-        @scheduler.task('interval', id='conn_random', days=1)
-        def conn_random():
-            """
-            AGleve随机数
-            :return:
-            """
-            aglevel()
-
         @scheduler.task('interval', id='implement', hours=6)
         def implement():
             """
@@ -160,7 +152,6 @@ class RunMain(GetIp, HttpRe):
         t2 = threading.Thread(target=self.check_exist_ip_thread)
         t1.start()
         t2.start()
-        run_web()
 
 
 if __name__ == '__main__':

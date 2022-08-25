@@ -71,8 +71,9 @@ class IPsql:
         :return: http或https的代理,反之-1
         """
 
+        global cursor, conn
         try:
-            time.sleep(random.uniform(0.8, 1.8))
+            time.sleep(random.uniform(0.8, 1.3))
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
             # _results = []
@@ -102,13 +103,45 @@ class IPsql:
         except Exception as e:
             return -1
 
-    # def close(self):
-    #     """
-    #     关闭数据库
-    #     :return:
-    #     """
-    #     try:
-    #         self.cursor.close()
-    #         self.conn.close()
-    #     except Exception as ex:
-    #         raise Exception("关闭数据库连接失败")
+    # 下面是另一个表的
+    def del_ti(self, ID) -> int:
+        """
+        根据条件删除数据
+        """
+        try:
+            self.queue_sql.register_execute(f"delete from ti where ID={ID}")
+            return 0
+        except Exception as e:
+            return -1
+
+    def insert_ti(self, data: list) -> int:
+        """
+        :return: 0 or -1
+        """
+        try:
+            sql = f"INSERT INTO ti VALUES ({data[0]},'{data[1]}','{data[2]}')"
+            print(sql)
+            self.queue_sql.register_execute(sql)
+            return 0
+        except Exception as e:
+            print(e)
+            return -1
+
+    def query_ti(self) -> list:
+        """
+        查询数据所有
+        """
+        global cursor, conn
+        try:
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            # _results = []
+            cursor.execute(f"select * from ti order by ID asc")
+            # 获取查询数据
+            _results = cursor.fetchall()
+            return _results
+        except Exception as e:
+            return []
+        finally:
+            cursor.close()
+            conn.close()
