@@ -37,7 +37,9 @@ class GetNoFreeIp(BaseData):
                     self.time_kill.clear()
                     _count += 1
                 elif second:
-                    _count -= 1
+                    # 证明存活
+                    if _count > 0:
+                        _count -= 1
             except Exception:
                 self.time_kill.clear()
                 break
@@ -51,7 +53,7 @@ class GetNoFreeIp(BaseData):
         不支持并发检测
         """
         try:
-            self.flash_api_url()
+            self.flash_api_url()  # 重新读取文件内容
             if self.time_kill:
                 return self.time_kill[0]
 

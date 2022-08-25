@@ -94,6 +94,7 @@ def nofree_http():
     if ip_pause_flags:
         return 'http://127.0.0.1'
     result = GNF.get_nofree()
+    # 获取值为-1则调用免费池
     if result == -1:
         result = WF.check_node()
     # 若检查不过，返回127.0.0.1
