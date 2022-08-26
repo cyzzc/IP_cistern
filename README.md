@@ -8,7 +8,6 @@
 ```shell
 docker run -dit \
   -p 5001:5001 \
-  -e TZ=CST-8 \
   --name http \
   --restart unless-stopped \
   xgzk/httpproxy:latest
